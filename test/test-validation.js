@@ -28,14 +28,7 @@ test('validation', function (t) {
     t.test('input pass', function (t) {
         t.plan(1);
 
-        inputvalid({
-            param: function () {
-                return this.params.id;
-            },
-            params: {
-                id: 1
-            },
-        }, {}, function (error) {
+        inputvalid(1, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -43,13 +36,7 @@ test('validation', function (t) {
     t.test('input fail (not present)', function (t) {
         t.plan(1);
 
-        inputvalid({
-            param: function () {
-                return undefined;
-            },
-            params: {
-            },
-        }, {}, function (error) {
+        inputvalid(undefined, function (error) {
             t.ok(error, 'error.');
         });
     });
@@ -61,13 +48,7 @@ test('validation', function (t) {
             paramType: 'query',
             name: 'id',
             required: false
-        }, 'integer')({
-            param: function () {
-                return undefined;
-            },
-            params: {
-            },
-        }, {}, function (error) {
+        }, 'integer')(undefined, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -79,14 +60,7 @@ test('validation', function (t) {
             paramType: 'query',
             name: 'id',
             required: true
-        }, 'float')({
-            param: function () {
-                return this.params.id;
-            },
-            params: {
-                id: '1.0'
-            },
-        }, {}, function (error) {
+        }, 'float')('1.0', function (error) {
             error && console.error(error);
             t.ok(!error, 'no error.');
         });
@@ -99,14 +73,7 @@ test('validation', function (t) {
             paramType: 'query',
             name: 'id',
             required: true
-        }, 'byte')({
-            param: function () {
-                return this.params.id;
-            },
-            params: {
-                id: 'a'
-            },
-        }, {}, function (error) {
+        }, 'byte')('a', function (error) {
             error && console.error(error);
             t.ok(!error, 'no error.');
         });
@@ -119,14 +86,7 @@ test('validation', function (t) {
             paramType: 'query',
             name: 'id',
             required: true
-        }, 'boolean')({
-            param: function () {
-                return this.params.id;
-            },
-            params: {
-                id: 1
-            },
-        }, {}, function (error) {
+        }, 'boolean')(1, function (error) {
             error && console.error(error);
             t.ok(!error, 'no error.');
         });
@@ -139,14 +99,7 @@ test('validation', function (t) {
             paramType: 'query',
             name: 'id',
             required: true
-        }, 'string')({
-            param: function () {
-                return this.params.id;
-            },
-            params: {
-                id: 1
-            },
-        }, {}, function (error) {
+        }, 'string')(1, function (error) {
             t.ok(!error, 'no error.');
         });
     });
