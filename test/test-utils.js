@@ -5,14 +5,6 @@ var test = require('tape'),
 
 test('utils', function (t) {
 
-    t.test('convertPath', function (t) {
-        t.plan(1);
-
-        var path = utils.convertPath('/foo/{id}/asdf/{name}');
-
-        t.strictEqual(path, '/foo/:id/asdf/:name', 'is converted.');
-    });
-
     t.test('prefix', function (t) {
         t.plan(3);
 
