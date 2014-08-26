@@ -24,7 +24,7 @@ test('configure', function (t) {
     });
 
     t.test('api', function (t) {
-        t.plan(5);
+        t.plan(4);
 
         var options = swaggerize({
           api: require('./fixtures/api.json')
@@ -32,7 +32,6 @@ test('configure', function (t) {
 
         t.ok(thing.isObject(options), 'returns object.');
         t.ok(thing.isObject(options.api), 'returns options.api object.');
-        t.ok(thing.isString(options.docspath), 'returns options.docspath string.');
         t.ok(thing.isArray(options.routes), 'returns options.routes array.');
         t.strictEqual(options.routes.length, 4, 'routes.length 4.');
     });

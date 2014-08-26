@@ -20,15 +20,15 @@ var builder = require('swaggerize-builder');
 
 builder({
     api: require('./api.json'),
-    docspath: '/api-docs',
     handlers: './handlers'
 }));
 ```
 
+This will return an object containing the `api` and a `routes` array object.
+
 Options:
 
 - `api` - a valid Swagger 1.2 document.
-- `docspath` - the path to expose api docs for swagger-ui, etc. Defaults to `/`.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 
 ### Handlers Directory
@@ -106,6 +106,23 @@ Note that if you are programatically constructing a handlers obj, you must names
 avoid conflicts with path names. These keys should also be *lowercase*.
 
 Handler keys in files do *not* have to be namespaced in this way.
+
+### Route Object
+
+The `routes` array returned from the call to the builder will contain `route` objects. Each `route` has the following properties:
+
+- `name` - same as `nickname` in `api` definition.
+- `path` - same as `path` from `api` definition.
+- `method` - same as `method` from `api` `operation` definition.
+- `validators` - a validation object created from each `parameter` on the `operation`.
+- `handler` - a handler function appropriate to the target framework (e.g express).
+
+### Validator Object
+
+The validator object in the `validators` array will have the following properties:
+
+- `parameter` - same as the `parameter` from the `operation`.
+- `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
 
 ### Contribution
 
