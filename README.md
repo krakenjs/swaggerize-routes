@@ -1,37 +1,24 @@
-[![Build Status](https://travis-ci.org/krakenjs/swaggerize-express.png)](https://travis-ci.org/krakenjs/swaggerize-express) [![NPM version](https://badge.fury.io/js/swaggerize-express.png)](http://badge.fury.io/js/swaggerize-express)
+[![Build Status](https://travis-ci.org/krakenjs/swaggerize-builder.png)](https://travis-ci.org/krakenjs/swaggerize-builder) [![NPM version](https://badge.fury.io/js/swaggerize-builder.png)](http://badge.fury.io/js/swaggerize-builder)
 
-# swaggerize-express
+# swaggerize-builder
 
-- **Version:** `0.1.0-alpha.6`
+- **Version:** `1.0.0-rc.1`
 - **Stability:** `unstable`
-- **Changelog:** [https://github.com/krakenjs/swaggerize-express/blob/master/CHANGELOG.md](https://github.com/krakenjs/swaggerize-express/blob/master/CHANGELOG.md)
+- **Changelog:** [https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md](https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md)
 
-`swaggerize-express` is a "spec first" approach to building RESTful services with a [Swagger spec](https://github.com/wordnik/swagger-spec/blob/master/versions/1.2.md)
-and Express.
+`swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) for parsing and building route definitions based on a [Swagger document](https://github.com/wordnik/swagger-spec/blob/master/versions/1.2.md).
 
-`swaggerize-express` provides the following features:
+`swaggerize-builder` provides the following features:
 
 - Schema validation.
-- Express routes binding.
-- API documentation route.
-- Input model validation.
-- Models and handlers stubs generator command (`swaggerize`).
-
-### Why "Spec First"
-
-There are already a number of modules that help build REST services with express and swagger. However,
-these modules tend to focus on building the documentation or specification as a side effect of writing
-the application business logic.
-
-`swaggerize-express` begins with the service specification first. This facilitates writing services that
-are easier to design, review, and test.
+- Building route definitions from a Swagger document.
 
 ### Usage
 
 ```javascript
-var swaggerize = require('swaggerize-express');
+var builder = require('swaggerize-builder');
 
-app.use(swaggerize({
+builder({
     api: require('./api.json'),
     docspath: '/api-docs',
     handlerspath: './handlers'
@@ -43,38 +30,6 @@ Options:
 - `api` - a valid Swagger 1.2 document.
 - `docspath` - the path to expose api docs for swagger-ui, etc. Defaults to `/`.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
-
-The base url for the api can also be updated via the `setUrl` function on the middleware.
-
-Example:
-
-```javascript
-var http = require('http');
-var express = require('express');
-var swaggerize = require('swaggerize-express');
-
-app = express();
-
-var server = http.createServer(app);
-
-var swagger = swaggerize({
-    api: require('./api.json'),
-    docspath: '/api-docs',
-    handlers: './handlers'
-});
-
-app.use(swagger);
-
-server.listen(port, 'localhost', function () {
-    swagger.setUrl('http://' + server.address().address + ':' + server.address().port);
-});
-```
-
-Also checkout the [Quick Start Guide](https://github.com/krakenjs/swaggerize-express/blob/master/QUICKSTART.md).
-
-### Mount Path
-
-Api `path` values will be prefixed with the swagger document's `resourcePath` value.
 
 ### Handlers Directory
 
@@ -122,24 +77,13 @@ Each provided javascript file should follow the format of:
 
 ```javascript
 module.exports = {
-    get: function (req, res) { ... },
-    put: function (req, res) { ... },
+    get: function (...) { ... },
+    put: function (...) { ... },
     ...
 }
 ```
 
-Where each http method has a handler.
-
-Optionally, middleware can be used by providing an array:
-
-```javascript
-module.exports = {
-    get: [
-        function (req, res, next) { next(); },
-        function (req, res) { ... }
-    ],
-}
-```
+Where each http method has a handler for the target framework (e.g. express).
 
 ### Handlers Object
 
@@ -148,10 +92,10 @@ The directory generation will yield this object, but it can be provided directly
 ```javascript
 {
     'foo': {
-        '$get': function (req, res) { ... },
+        '$get': function (...) { ... },
         'bar': {
-            '$get': function (req, res) { ... },
-            '$post': function (req, res) { ... }
+            '$get': function (...) { ... },
+            '$post': function (...) { ... }
         }
     }
     ...
@@ -163,25 +107,9 @@ avoid conflicts with path names. These keys should also be *lowercase*.
 
 Handler keys in files do *not* have to be namespaced in this way.
 
-### Generator
-
-You can generate models and handlers stubs by running the following command:
-
-```shell
-swaggerize --api <swagger document> [[--models <models dir>] | [--handlers <handlers dir>] | [--tests <tests dir>]]
-```
-
-Example:
-
-```shell
-swaggerize --api config/api.json --models resources/models --handlers resources/handlers --tests tests/
-```
-
-`--api` is required, but only one of `--models` or `--handlers` or `--tests` is required.
-
 ### Contribution
 
-In order to run the swaggerize-express unit tests, execute the following commands:
+In order to run the swaggerize-builder unit tests, execute the following commands:
 
 ```bash
 $ git submodule update --init --recursive
