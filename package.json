@@ -1,11 +1,10 @@
 {
-  "name": "swaggerize-express",
-  "version": "0.1.0-alpha.6",
+  "name": "swaggerize-builder",
+  "version": "1.0.0-rc.1",
   "author": "Trevor Livingston <trlivingston@paypal.com>",
-  "description": "Spec-first driven swagger express routing.",
+  "description": "Spec-first driven swagger route builder.",
   "keywords": [
     "swagger",
-    "express",
     "node",
     "node.js",
     "rest",
@@ -14,14 +13,11 @@
     "api"
   ],
   "main": "./lib/index",
-  "bin": {
-    "swaggerize": "bin/swaggerize.js"
-  },
   "repository": {
     "type": "git",
-    "url": "git://github.com/krakenjs/swaggerize-express.git"
+    "url": "git://github.com/krakenjs/swaggerize-builder.git"
   },
-  "bugs": "http://github.com/krakenjs/swaggerize-express/issues",
+  "bugs": "http://github.com/krakenjs/swaggerize-builder/issues",
   "engines": {
     "node": "0.10.x"
   },
@@ -30,20 +26,12 @@
     "caller": "^0.0.1",
     "core-util-is": "^1.0.1",
     "debuglog": "^1.0.1",
-    "lodash": "^2.4.1",
-    "minimist": "^0.2.0",
-    "mkdirp": "^0.5.0",
     "tv4": "^1.1.0"
-  },
-  "peerDependencies": {
-    "express": "^4.0.0"
   },
   "devDependencies": {
     "tape": "^2.4.2",
     "istanbul": "^0.2.3",
-    "jshint": "^2.4.1",
-    "express": "^4.6.1",
-    "supertest": "^0.13.0"
+    "jshint": "^2.4.1"
   },
   "scripts": {
     "test": "tape test/*.js",

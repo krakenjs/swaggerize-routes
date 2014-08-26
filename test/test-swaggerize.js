@@ -1,120 +1,40 @@
 'use strict';
 
 var test = require('tape'),
-    swaggerize = require('../lib'),
-    express = require('express'),
-    request = require('supertest');
+    thing = require('core-util-is'),
+    swaggerize = require('../lib/index'),
+    path = require('path');
 
-test('swaggycat valid input/output', function (t) {
+test('configure', function (t) {
 
-    var app = express();
-    var swaggycat = swaggerize({
-        api: require('./fixtures/api.json')
+    t.test('fail no options', function (t) {
+        t.plan(1);
+
+        t.throws(function () {
+            swaggerize();
+        }, 'throws exception.');
     });
 
-    app.use(swaggycat);
+    t.test('fail no api definition', function (t) {
+        t.plan(1);
+
+        t.throws(function () {
+            swaggerize({});
+        }, 'throws exception.');
+    });
 
     t.test('api', function (t) {
         t.plan(5);
 
-        t.ok(swaggycat.hasOwnProperty('_api'), 'has _api property.');
-        t.ok(swaggycat._api, '_api is an object.');
-
-        t.ok(swaggycat.hasOwnProperty('setUrl'), 'has setUrl property.');
-        t.strictEqual(typeof swaggycat.setUrl, 'function', 'setUrl is a function.');
-
-        swaggycat.setUrl('http://localhost:8080');
-
-        t.strictEqual(swaggycat._api.basePath, 'http://localhost:8080/v1/greetings');
-    });
-
-    t.test('docs', function (t) {
-        t.plan(2);
-
-        request(app).get('/v1/greetings/api-docs').end(function (error, response) {
-            t.ok(!error, 'no error.');
-            t.strictEqual(response.statusCode, 200, '200 status.');
+        var options = swaggerize({
+          api: require('./fixtures/api.json')
         });
-    });
 
-    t.test('route', function (t) {
-        t.plan(2);
-
-        request(app).get('/v1/greetings/hello').end(function (error, response) {
-            t.ok(!error, 'no error.');
-            t.strictEqual(response.statusCode, 404, '404 required param missing.');
-        });
-    });
-
-
-    t.test('route', function (t) {
-        t.plan(3);
-
-        request(app).get('/v1/greetings/hello/doge').end(function (error, response) {
-            t.ok(!error, 'no error.');
-            t.strictEqual(response.statusCode, 200, '200 status.');
-            t.strictEqual(response.text, 'hello', 'body is correct.');
-        });
-    });
-
-    t.test('route', function (t) {
-        t.plan(2);
-
-        request(app).get('/v1/greetings/sub/1').end(function (error, response) {
-            t.ok(!error, 'no error.');
-            t.strictEqual(response.statusCode, 200, '200 status.');
-        });
-    });
-
-    t.test('route', function (t) {
-        t.plan(2);
-
-        request(app).get('/v1/greetings/sub/1/path').end(function (error, response) {
-            t.ok(!error, 'no error.');
-            t.strictEqual(response.statusCode, 200, '200 status.');
-        });
-    });
-
-});
-
-test('swaggycat invalid input', function (t) {
-
-    var app = express();
-
-    app.use(swaggerize({
-        api: require('./fixtures/api.json'),
-        handlers: {
-            sub: {
-                '{id}': {
-                    $get: function (req, reply) {
-                        reply('foobar');
-                    }
-                }
-            },
-            goodbye: {
-                $get: function (req, reply) {
-                    reply('baz');
-                }
-            }
-        }
-    }));
-
-    t.test('bad input', function (t) {
-        t.plan(2);
-
-        request(app).get('/v1/greetings/sub/asdf').end(function (error, response) {
-            t.ok(!error, 'no error.');
-            t.strictEqual(response.statusCode, 400, '400 status.');
-        });
-    });
-
-    t.test('null input not found', function (t) {
-        t.plan(2);
-
-        request(app).get('/v1/greetings/goodbye').end(function (error, response) {
-            t.ok(!error, 'no error.');
-            t.strictEqual(response.statusCode, 404, '404 status.');
-        });
+        t.ok(thing.isObject(options), 'returns object.');
+        t.ok(thing.isObject(options.api), 'returns options.api object.');
+        t.ok(thing.isString(options.docspath), 'returns options.docspath string.');
+        t.ok(thing.isArray(options.routes), 'returns options.routes array.');
+        t.strictEqual(options.routes.length, 4, 'routes.length 4.');
     });
 
 });
