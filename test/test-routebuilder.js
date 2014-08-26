@@ -18,7 +18,7 @@ test('routebuilder', function (t) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('before'), 'has before property.');
+            t.ok(route.hasOwnProperty('validators'), 'has before property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
         });
 
@@ -36,7 +36,7 @@ test('routebuilder', function (t) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('before'), 'has before property.');
+            t.ok(route.hasOwnProperty('validators'), 'has before property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
         });
 
