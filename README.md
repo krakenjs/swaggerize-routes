@@ -21,7 +21,7 @@ var builder = require('swaggerize-builder');
 builder({
     api: require('./api.json'),
     docspath: '/api-docs',
-    handlerspath: './handlers'
+    handlers: './handlers'
 }));
 ```
 
