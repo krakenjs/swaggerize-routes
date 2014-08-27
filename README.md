@@ -24,12 +24,12 @@ builder({
 }));
 ```
 
-This will return an object containing the `api` and a `routes` array object.
-
 Options:
 
 - `api` - a valid Swagger 1.2 document.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
+
+**Returns:** An array of the processed routes.
 
 ### Handlers Directory
 
