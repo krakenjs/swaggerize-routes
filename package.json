@@ -2,16 +2,7 @@
   "name": "swaggerize-builder",
   "version": "1.0.0-rc.1",
   "author": "Trevor Livingston <trlivingston@paypal.com>",
-  "description": "Spec-first driven swagger route builder.",
-  "keywords": [
-    "swagger",
-    "node",
-    "node.js",
-    "rest",
-    "restful",
-    "service",
-    "api"
-  ],
+  "description": "Swagger based route building.",
   "main": "./lib/index",
   "repository": {
     "type": "git",
