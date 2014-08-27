@@ -24,16 +24,14 @@ test('configure', function (t) {
     });
 
     t.test('api', function (t) {
-        t.plan(4);
+        t.plan(2);
 
-        var options = swaggerize({
-          api: require('./fixtures/api.json')
+        var routes = swaggerize({
+            api: require('./fixtures/api.json')
         });
 
-        t.ok(thing.isObject(options), 'returns object.');
-        t.ok(thing.isObject(options.api), 'returns options.api object.');
-        t.ok(thing.isArray(options.routes), 'returns options.routes array.');
-        t.strictEqual(options.routes.length, 4, 'routes.length 4.');
+        t.ok(thing.isArray(routes), 'returns array.');
+        t.strictEqual(routes.length, 4, 'routes.length 4.');
     });
 
 });
