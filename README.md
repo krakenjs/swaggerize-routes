@@ -19,17 +19,26 @@
 var builder = require('swaggerize-builder');
 
 builder({
-    api: require('./api.json'),
-    handlers: './handlers'
+    resources: [
+        {
+            api: require('./resource.json'),
+            handlers: './handlers'
+        }
+    ]
 }));
 ```
 
 Options:
 
-- `api` - a valid Swagger 1.2 document.
+- `resources` - an array of resource configurations.
+- `basedir` - an (optional) root directory search path for handlers; defaults to direactory of caller.
+
+Resources:
+
+- `api` - a valid Swagger 1.2 api declaration.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 
-**Returns:** An array of the processed routes.
+**Returns:** An array of routes.
 
 ### Handlers Directory
 

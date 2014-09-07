@@ -27,11 +27,33 @@ test('configure', function (t) {
         t.plan(2);
 
         var routes = swaggerize({
-            api: require('./fixtures/api.json')
+            resources: [
+                {
+                    api: require('./fixtures/api.json')
+                }
+            ]
         });
 
         t.ok(thing.isArray(routes), 'returns array.');
         t.strictEqual(routes.length, 4, 'routes.length 4.');
+    });
+
+    t.test('multiple api', function (t) {
+        t.plan(2);
+
+        var routes = swaggerize({
+            resources: [
+                {
+                    api: require('./fixtures/api.json')
+                },
+                {
+                    api: require('./fixtures/collections.json')
+                }
+            ]
+        });
+
+        t.ok(thing.isArray(routes), 'returns array.');
+        t.strictEqual(routes.length, 7, 'routes.length 7.');
     });
 
 });
