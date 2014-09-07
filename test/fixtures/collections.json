@@ -10,7 +10,8 @@
                 {
                     "method": "GET",
                     "type": "string",
-                    "nickname": "stuffs"
+                    "nickname": "stuffs",
+                    "parameters": []
                 }
             ]
         },
@@ -38,7 +39,8 @@
                 {
                     "method": "GET",
                     "type": "string",
-                    "nickname": "getMiddlewares"
+                    "nickname": "getMiddlewares",
+                    "parameters": []
                 }
             ]
         }
