@@ -26,8 +26,9 @@ builder({
 
 Options:
 
-- `api` - a valid Swagger 1.2 document.
+- `api` - a valid Swagger 1.2 api descriptor document.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
+- `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
 
 **Returns:** An array of the processed routes.
 
