@@ -14,6 +14,14 @@ test('schema', function (t) {
         t.ok(results.valid, 'no errors');
     });
 
+    t.test('validate against cached schema', function (t) {
+        t.plan(1);
+
+        var results = schema.validate(require('./fixtures/listing.json'), 'resourceListing.json');
+
+        t.ok(results.valid, 'no errors');
+    });
+
     t.test('bad api', function (t) {
         t.plan(2);
 
