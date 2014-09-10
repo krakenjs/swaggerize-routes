@@ -113,11 +113,13 @@ Handler keys in files do *not* have to be namespaced in this way.
 
 The `routes` array returned from the call to the builder will contain `route` objects. Each `route` has the following properties:
 
-- `name` - same as `nickname` in `api` definition.
 - `path` - same as `path` from `api` definition.
+- `name` - same as `operationId` in `api` definition.
+- `description` - same as `description` in `path` for `api` definition.
 - `method` - same as `method` from `api` `operation` definition.
 - `validators` - a validation object created from each `parameter` on the `operation`.
 - `handler` - a handler function appropriate to the target framework (e.g express).
+- `produces` - same as `produces` in `path` for `api` definition.
 
 ### Validator Object
 
