@@ -2,8 +2,7 @@
 
 # swaggerize-builder
 
-- **Version:** `1.0.0-rc.1`
-- **Stability:** `unstable`
+- **Stability:** `stable`
 - **Changelog:** [https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md](https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md)
 
 `swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) for parsing and building route definitions based on a [Swagger document](https://github.com/wordnik/swagger-spec/blob/master/versions/1.2.md).
