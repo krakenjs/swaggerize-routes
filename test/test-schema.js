@@ -1,10 +1,10 @@
 'use strict';
 
 var test = require('tape'),
-    schema = require('../lib/schema'),
-    apiDefinition = require('./fixtures/api.json');
+    schema = require('../lib/schema');
 
 test('schema', function (t) {
+    var apiDefinition = require('./fixtures/defs/pets.json');
 
     t.test('good api', function (t) {
         t.plan(1);
@@ -14,42 +14,10 @@ test('schema', function (t) {
         t.ok(results.valid, 'no errors');
     });
 
-    t.test('validate against cached schema', function (t) {
-        t.plan(1);
-
-        var results = schema.validate(require('./fixtures/listing.json'), 'resourceListing.json');
-
-        t.ok(results.valid, 'no errors');
-    });
-
     t.test('bad api', function (t) {
         t.plan(2);
 
-        var results = schema.validate({
-            "swaggerVersion": "1.2",
-            "basePath": "http://localhost:8000/greetings",
-            "apis": [
-                {
-                    "path": "/hello/{subject}",
-                    "operations": [
-                        {
-                            "method": "GET",
-                            "summary": "Greet our subject with hello!",
-                            "type": "string",
-                            "parameters": [
-                                {
-                                    "name": "subject",
-                                    "description": "The subject to be greeted.",
-                                    "required": true,
-                                    "type": "string",
-                                    "paramType": "path"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        });
+        var results = schema.validate(require('./fixtures/defs/badapi.json'));
 
         t.ok(!results.valid, 'bad');
         t.ok(results.error, 'has error.');

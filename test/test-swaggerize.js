@@ -27,7 +27,8 @@ test('configure', function (t) {
         t.plan(2);
 
         var routes = swaggerize({
-            api: require('./fixtures/api.json')
+            api: require('./fixtures/defs/pets.json'),
+            basedir: path.join(__dirname, './fixtures')
         });
 
         t.ok(thing.isArray(routes), 'returns array.');

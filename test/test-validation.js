@@ -20,10 +20,10 @@ test('validation', function (t) {
     });
 
     inputvalid = validation.input({
-        paramType: 'query',
         name: 'id',
-        required: true
-    }, 'integer');
+        required: true,
+        type: 'integer'
+    });
 
     t.test('input pass', function (t) {
         t.plan(1);
@@ -45,10 +45,10 @@ test('validation', function (t) {
         t.plan(1);
 
         validation.input({
-            paramType: 'query',
             name: 'id',
-            required: false
-        }, 'integer')(undefined, function (error) {
+            required: false,
+            type: 'integer'
+        })(undefined, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -57,10 +57,10 @@ test('validation', function (t) {
         t.plan(1);
 
         validation.input({
-            paramType: 'query',
             name: 'id',
-            required: true
-        }, 'float')('1.0', function (error) {
+            required: true,
+            type: 'float'
+        })('1.0', function (error) {
             error && console.error(error);
             t.ok(!error, 'no error.');
         });
@@ -70,10 +70,10 @@ test('validation', function (t) {
         t.plan(1);
 
         validation.input({
-            paramType: 'query',
             name: 'id',
-            required: true
-        }, 'byte')('a', function (error) {
+            required: true,
+            type: 'byte'
+        })('a', function (error) {
             error && console.error(error);
             t.ok(!error, 'no error.');
         });
@@ -83,10 +83,10 @@ test('validation', function (t) {
         t.plan(1);
 
         validation.input({
-            paramType: 'query',
             name: 'id',
-            required: true
-        }, 'boolean')(1, function (error) {
+            required: true,
+            type: 'boolean'
+        })(1, function (error) {
             error && console.error(error);
             t.ok(!error, 'no error.');
         });
@@ -96,22 +96,10 @@ test('validation', function (t) {
         t.plan(1);
 
         validation.input({
-            paramType: 'query',
             name: 'id',
-            required: true
-        }, 'string')(1, function (error) {
-            t.ok(!error, 'no error.');
-        });
-    });
-
-    t.test('input pass (no model)', function (t) {
-        t.plan(1);
-
-        validation.input({
-            paramType: 'query',
-            name: 'id',
-            required: true
-        }, undefined)(1, function (error) {
+            required: true,
+            type: 'string'
+        })(1, function (error) {
             t.ok(!error, 'no error.');
         });
     });
