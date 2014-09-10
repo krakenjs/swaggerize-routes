@@ -10,14 +10,14 @@
 `swaggerize-builder` provides the following features:
 
 - Schema validation.
-- Building route definitions from a Swagger document.
+- Building route definitions from a Swagger 2.0 document.
 
 ### Usage
 
 ```javascript
 var builder = require('swaggerize-builder');
 
-builder({
+var routes = builder({
     api: require('./api.json'),
     handlers: './handlers'
 }));
@@ -125,7 +125,7 @@ The `routes` array returned from the call to the builder will contain `route` ob
 
 The validator object in the `validators` array will have the following properties:
 
-- `parameter` - same as the `parameter` from the `operation`.
+- `parameter` - same as the `parameter` from the operation on `path`.
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
 
 ### Contribution

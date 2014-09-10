@@ -5,11 +5,9 @@ var test = require('tape'),
     buildroutes = require('../lib/buildroutes');
 
 test('routebuilder', function (t) {
-    var api = require('./fixtures/defs/pets.json');
+    var routes, api = require('./fixtures/defs/pets.json');
 
     t.test('build', function (t) {
-        var routes;
-
         routes = buildroutes({ api: api, handlers: path.join(__dirname, 'fixtures/handlers') });
 
         t.strictEqual(routes.length, 4, 'added 4 routes.');
@@ -22,6 +20,29 @@ test('routebuilder', function (t) {
             t.ok(route.hasOwnProperty('validators'), 'has before property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
             t.ok(route.hasOwnProperty('produces'), 'has method property.');
+        });
+
+        t.end();
+    });
+
+    t.test('route validators', function (t) {
+        var route = routes[1];
+
+        t.strictEqual(route.validators.length, 1, 'has a validator.');
+        t.ok(typeof route.validators[0].parameter === 'object', 'has parameter object property.');
+        t.ok(typeof route.validators[0].validate === 'function', 'has validate fn property.');
+
+        route.validators[0].validate({
+            id: 0
+        }, function (error, newvalue) {
+            t.ok(error, 'validation passed.');
+        });
+
+        route.validators[0].validate({
+            id: 0,
+            name: 'Cat'
+        }, function (error, newvalue) {
+            t.ok(!error, 'validation passed.');
         });
 
         t.end();

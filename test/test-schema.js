@@ -27,22 +27,22 @@ test('schema', function (t) {
         t.plan(1);
 
         var modelSchema = {
-            "id": "User",
-            "required": ["id", "name"],
-            "properties": {
-                "name": {
-                    "type": "string"
+            'id': 'User',
+            'required': ['id', 'name'],
+            'properties': {
+                'name': {
+                    'type': 'string'
                 },
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
+                'id': {
+                    'type': 'integer',
+                    'format': 'int64'
                 }
             }
         };
 
         var results = schema.validate({
-            "id": 123,
-            "name": "John Doe"
+            'id': 123,
+            'name': 'John Doe'
         }, modelSchema);
 
         t.ok(results.valid, 'no errors');
@@ -52,26 +52,60 @@ test('schema', function (t) {
         t.plan(2);
 
         var modelSchema = {
-            "id": "User",
-            "required": ["id", "name"],
-            "properties": {
-                "name": {
-                    "type": "string"
+            'id': 'User',
+            'required': ['id', 'name'],
+            'properties': {
+                'name': {
+                    'type': 'string'
                 },
-                "id": {
-                    "type": "integer",
-                    "format": "int64"
+                'id': {
+                    'type': 'integer',
+                    'format': 'int64'
                 }
             }
         };
 
         var results = schema.validate({
-            "id": "asdf",
-            "name": "John Doe"
+            'id': 'asdf',
+            'name': 'John Doe'
         }, modelSchema);
 
         t.ok(!results.valid, 'bad');
         t.ok(results.error, 'has error.');
     });
+
+    t.test('validate by $ref model fail', function (t) {
+        t.plan(2);
+
+        var modelSchema = {
+            '$ref': '#/definitions/Pet',
+            'definitions': apiDefinition.definitions
+        };
+
+        var results = schema.validate({
+            'id': 'asdf'
+        }, modelSchema);
+
+        t.ok(!results.valid, 'bad');
+        t.ok(results.error, 'has error.');
+    });
+
+    t.test('validate by $ref model pass', function (t) {
+        t.plan(2);
+
+        var modelSchema = {
+            '$ref': '#/definitions/Pet',
+            'definitions': apiDefinition.definitions
+        };
+
+        var results = schema.validate({
+            'id': 0,
+            'name': 'Cat'
+        }, modelSchema);
+
+        t.ok(results.valid, 'pass');
+        t.ok(!results.error, 'no error.');
+    });
+
 
 });

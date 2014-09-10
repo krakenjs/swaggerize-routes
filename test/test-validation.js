@@ -7,14 +7,16 @@ test('validation', function (t) {
     var outputvalid, inputvalid;
 
     outputvalid = validation.output({
-        "id": "User",
-        "required": ["id", "name"],
-        "properties": {
-            "name": {
-                "type": "string"
+        name: 'userInput'
+    }, {
+        'id': 'User',
+        'required': ['id', 'name'],
+        'properties': {
+            'name': {
+                'type': 'string'
             },
-            "id": {
-                "type": "integer"
+            'id': {
+                'type': 'integer'
             }
         }
     });
@@ -53,6 +55,20 @@ test('validation', function (t) {
         });
     });
 
+    t.test('input coerce to null from empty object', function (t) {
+        t.plan(1);
+
+        validation.input({
+            name: 'id',
+            required: true,
+            schema: {
+                '$ref': '#/definitions/petInput'
+            }
+        })({}, function (error) {
+            t.ok(error, 'no error.');
+        });
+    });
+
     t.test('input coerce to float (pass)', function (t) {
         t.plan(1);
 
@@ -61,7 +77,6 @@ test('validation', function (t) {
             required: true,
             type: 'float'
         })('1.0', function (error) {
-            error && console.error(error);
             t.ok(!error, 'no error.');
         });
     });
@@ -74,7 +89,6 @@ test('validation', function (t) {
             required: true,
             type: 'byte'
         })('a', function (error) {
-            error && console.error(error);
             t.ok(!error, 'no error.');
         });
     });
@@ -87,7 +101,6 @@ test('validation', function (t) {
             required: true,
             type: 'boolean'
         })(1, function (error) {
-            error && console.error(error);
             t.ok(!error, 'no error.');
         });
     });

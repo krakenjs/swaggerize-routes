@@ -60,14 +60,14 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/pet"
+                "$ref": "#/definitions/Pet"
               }
             }
           },
           "default": {
             "description": "unexpected error",
             "schema": {
-              "$ref": "#/definitions/errorModel"
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -85,7 +85,7 @@
             "description": "Pet to add to the store",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/petInput"
+              "$ref": "#/definitions/Pet"
             }
           }
         ],
@@ -93,13 +93,13 @@
           "200": {
             "description": "pet response",
             "schema": {
-              "$ref": "#/definitions/pet"
+              "$ref": "#/definitions/Pet"
             }
           },
           "default": {
             "description": "unexpected error",
             "schema": {
-              "$ref": "#/definitions/errorModel"
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -129,13 +129,13 @@
           "200": {
             "description": "pet response",
             "schema": {
-              "$ref": "Pet"
+              "$ref": "#/definitions/Pet"
             }
           },
           "default": {
             "description": "unexpected error",
             "schema": {
-              "$ref": "#/definitions/errorModel"
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -160,7 +160,7 @@
           "default": {
             "description": "unexpected error",
             "schema": {
-              "$ref": "#/definitions/errorModel"
+              "$ref": "#/definitions/Error"
             }
           }
         }
@@ -168,7 +168,7 @@
     }
   },
   "definitions": {
-    "pet": {
+    "Pet": {
       "required": [
         "id",
         "name"
@@ -186,25 +186,7 @@
         }
       }
     },
-    "petInput": {
-      "allOf": [
-        {
-          "$ref": "Pet"
-        },
-        {
-          "required": [
-            "name"
-          ],
-          "properties": {
-            "id": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        }
-      ]
-    },
-    "errorModel": {
+    "Error": {
       "required": [
         "code",
         "message"
