@@ -1,36 +1,23 @@
 'use strict';
 
 var test = require('tape'),
-    validation = require('../lib/validation');
+    tv4 = require('tv4'),
+    validation = require('../lib/validator'),
+    thing = require('core-util-is');
 
 test('validation', function (t) {
-    var outputvalid, inputvalid;
+    var inputvalid;
 
-    outputvalid = validation.output({
-        name: 'userInput'
-    }, {
-        'id': 'User',
-        'required': ['id', 'name'],
-        'properties': {
-            'name': {
-                'type': 'string'
-            },
-            'id': {
-                'type': 'integer'
-            }
-        }
-    });
-
-    inputvalid = validation.input({
-        name: 'id',
-        required: true,
-        type: 'integer'
-    });
+    tv4.addSchema('#', require('./fixtures/defs/pets.json'));
 
     t.test('input pass', function (t) {
         t.plan(1);
 
-        inputvalid(1, function (error) {
+        validation(tv4, {
+            name: 'id',
+            required: true,
+            type: 'integer'
+        })(1, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -38,7 +25,11 @@ test('validation', function (t) {
     t.test('input fail (not present)', function (t) {
         t.plan(1);
 
-        inputvalid(undefined, function (error) {
+        validation(tv4, {
+            name: 'id',
+            required: true,
+            type: 'integer'
+        })(undefined, function (error) {
             t.ok(error, 'error.');
         });
     });
@@ -46,7 +37,7 @@ test('validation', function (t) {
     t.test('input validation skip (not present, not required)', function (t) {
         t.plan(1);
 
-        validation.input({
+        validation(tv4, {
             name: 'id',
             required: false,
             type: 'integer'
@@ -58,11 +49,12 @@ test('validation', function (t) {
     t.test('input coerce to null from empty object', function (t) {
         t.plan(1);
 
-        validation.input({
+        validation(tv4, {
             name: 'id',
             required: true,
+            in: 'body',
             schema: {
-                '$ref': '#/definitions/petInput'
+                '$ref': '#/definitions/Pet'
             }
         })({}, function (error) {
             t.ok(error, 'no error.');
@@ -72,7 +64,7 @@ test('validation', function (t) {
     t.test('input coerce to float (pass)', function (t) {
         t.plan(1);
 
-        validation.input({
+        validation(tv4, {
             name: 'id',
             required: true,
             type: 'float'
@@ -84,7 +76,7 @@ test('validation', function (t) {
     t.test('input coerce to byte (pass)', function (t) {
         t.plan(1);
 
-        validation.input({
+        validation(tv4, {
             name: 'id',
             required: true,
             type: 'byte'
@@ -93,10 +85,69 @@ test('validation', function (t) {
         });
     });
 
+    t.test('input coerce to csv array (pass)', function (t) {
+        t.plan(2);
+
+        validation(tv4, {
+            name: 'id',
+            required: true,
+            type: 'array',
+            items: 'string'
+        })('a,b,c', function (error, value) {
+            t.ok(!error, 'no error.');
+            t.ok(thing.isArray(value), 'coerced to array.');
+        });
+    });
+
+    t.test('input coerce to ssv array (pass)', function (t) {
+        t.plan(2);
+
+        validation(tv4, {
+            name: 'id',
+            required: true,
+            type: 'array',
+            items: 'string',
+            collectionFormat: 'ssv'
+        })('a b c', function (error, value) {
+            t.ok(!error, 'no error.');
+            t.ok(thing.isArray(value), 'coerced to array.');
+        });
+    });
+
+    t.test('input coerce to tsv array (pass)', function (t) {
+        t.plan(2);
+
+        validation(tv4, {
+            name: 'id',
+            required: true,
+            type: 'array',
+            items: 'string',
+            collectionFormat: 'tsv'
+        })('a\tb\tc', function (error, value) {
+            t.ok(!error, 'no error.');
+            t.ok(thing.isArray(value), 'coerced to array.');
+        });
+    });
+
+    t.test('input coerce to pipes array (pass)', function (t) {
+        t.plan(2);
+
+        validation(tv4, {
+            name: 'id',
+            required: true,
+            type: 'array',
+            items: 'string',
+            collectionFormat: 'pipes'
+        })('a|b|c', function (error, value) {
+            t.ok(!error, 'no error.');
+            t.ok(thing.isArray(value), 'coerced to array.');
+        });
+    });
+
     t.test('input coerce to boolean (pass)', function (t) {
         t.plan(1);
 
-        validation.input({
+        validation(tv4, {
             name: 'id',
             required: true,
             type: 'boolean'
@@ -108,7 +159,7 @@ test('validation', function (t) {
     t.test('input coerce to string (pass)', function (t) {
         t.plan(1);
 
-        validation.input({
+        validation(tv4, {
             name: 'id',
             required: true,
             type: 'string'
@@ -120,56 +171,11 @@ test('validation', function (t) {
     t.test('input fail (bad type)', function (t) {
         t.plan(1);
 
-        inputvalid('hello', function (error) {
-            t.ok(error, 'error.');
-        });
-    });
-
-    t.test('output pass', function (t) {
-        t.plan(1);
-
-        outputvalid({
-            id: 1,
-            name: 'Test'
-        }, function (error) {
-            t.ok(!error, 'error.');
-        });
-    });
-
-    t.test('output fail (schema fail)', function (t) {
-        t.plan(3);
-
-        outputvalid({
-            id: 1,
-            name: 2
-        }, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        outputvalid({
-            id: 'Test',
-            name: 1
-        }, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        outputvalid('Test', function (error) {
-            t.ok(error, 'error.');
-        });
-    });
-
-    t.test('output fail (missing required)', function (t) {
-        t.plan(2);
-
-        outputvalid({
-            id: 1
-        }, function (error) {
-            t.ok(error, 'error.');
-        });
-
-        outputvalid({
-            name: 'Test'
-        }, function (error) {
+        validation(tv4, {
+            name: 'id',
+            required: true,
+            type: 'integer'
+        })('hello', function (error) {
             t.ok(error, 'error.');
         });
     });

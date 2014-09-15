@@ -28,6 +28,7 @@ Options:
 - `api` - a valid Swagger 2.0 object.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 - `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
+- `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
 
 **Returns:** An array of the processed routes.
 
