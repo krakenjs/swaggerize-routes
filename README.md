@@ -5,19 +5,19 @@
 - **Stability:** `stable`
 - **Changelog:** [https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md](https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md)
 
-`swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) for parsing and building route definitions based on a [Swagger document](https://github.com/wordnik/swagger-spec/blob/master/versions/1.2.md).
+`swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) for parsing and building route definitions based on a [Swagger document](https://github.com/wordnik/swagger-spec/blob/master/versions/2.0.md).
 
 `swaggerize-builder` provides the following features:
 
 - Schema validation.
-- Building route definitions from a Swagger document.
+- Building route definitions from a Swagger 2.0 document.
 
 ### Usage
 
 ```javascript
 var builder = require('swaggerize-builder');
 
-builder({
+var routes = builder({
     api: require('./api.json'),
     handlers: './handlers'
 }));
@@ -25,9 +25,10 @@ builder({
 
 Options:
 
-- `api` - a valid Swagger 1.2 api descriptor document.
+- `api` - a valid Swagger 2.0 object.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 - `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
+- `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
 
 **Returns:** An array of the processed routes.
 
@@ -113,17 +114,19 @@ Handler keys in files do *not* have to be namespaced in this way.
 
 The `routes` array returned from the call to the builder will contain `route` objects. Each `route` has the following properties:
 
-- `name` - same as `nickname` in `api` definition.
 - `path` - same as `path` from `api` definition.
+- `name` - same as `operationId` in `api` definition.
+- `description` - same as `description` in `path` for `api` definition.
 - `method` - same as `method` from `api` `operation` definition.
 - `validators` - a validation object created from each `parameter` on the `operation`.
 - `handler` - a handler function appropriate to the target framework (e.g express).
+- `produces` - same as `produces` in `path` for `api` definition.
 
 ### Validator Object
 
 The validator object in the `validators` array will have the following properties:
 
-- `parameter` - same as the `parameter` from the `operation`.
+- `parameter` - same as the `parameter` from the operation on `path`.
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
 
 ### Contribution
