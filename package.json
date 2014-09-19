@@ -1,6 +1,6 @@
 {
   "name": "swaggerize-builder",
-  "version": "2.0.0-rc.1",
+  "version": "2.0.0-rc.2",
   "author": "Trevor Livingston <trlivingston@paypal.com>",
   "description": "Swagger based route building.",
   "main": "./lib/index",
@@ -26,7 +26,7 @@
   "scripts": {
     "test": "tape test/*.js",
     "cover": "istanbul cover tape -- test/*.js",
-    "lint": "jshint -c .jshintrc lib/**/*.js"
+    "lint": "jshint -c .jshintrc lib/*.js"
   },
   "licenses": [
     {
