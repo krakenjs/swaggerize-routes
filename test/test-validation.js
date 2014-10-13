@@ -1,19 +1,19 @@
 'use strict';
 
 var test = require('tape'),
-    tv4 = require('tv4'),
     validation = require('../lib/validator'),
     thing = require('core-util-is');
 
 test('validation', function (t) {
-    var inputvalid;
+    var validator = validation({
+        api: require('./fixtures/defs/pets.json')
+    });
 
-    tv4.addSchema('#', require('./fixtures/defs/pets.json'));
 
     t.test('input pass', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'integer'
@@ -25,7 +25,7 @@ test('validation', function (t) {
     t.test('input fail (not present)', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'integer'
@@ -37,7 +37,7 @@ test('validation', function (t) {
     t.test('input validation skip (not present, not required)', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: false,
             type: 'integer'
@@ -49,7 +49,7 @@ test('validation', function (t) {
     t.test('input coerce to null from empty object', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             in: 'body',
@@ -64,7 +64,7 @@ test('validation', function (t) {
     t.test('input coerce to float (pass)', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'float'
@@ -76,7 +76,7 @@ test('validation', function (t) {
     t.test('input coerce to byte (pass)', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'byte'
@@ -88,11 +88,13 @@ test('validation', function (t) {
     t.test('input coerce to csv array (pass)', function (t) {
         t.plan(2);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'array',
-            items: 'string'
+            items:  {
+                type: 'string'
+            }
         })('a,b,c', function (error, value) {
             t.ok(!error, 'no error.');
             t.ok(thing.isArray(value), 'coerced to array.');
@@ -102,11 +104,13 @@ test('validation', function (t) {
     t.test('input coerce to ssv array (pass)', function (t) {
         t.plan(2);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'array',
-            items: 'string',
+            items: {
+                type: 'string'
+            },
             collectionFormat: 'ssv'
         })('a b c', function (error, value) {
             t.ok(!error, 'no error.');
@@ -117,11 +121,11 @@ test('validation', function (t) {
     t.test('input coerce to tsv array (pass)', function (t) {
         t.plan(2);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'array',
-            items: 'string',
+            items: { type: 'string' },
             collectionFormat: 'tsv'
         })('a\tb\tc', function (error, value) {
             t.ok(!error, 'no error.');
@@ -132,11 +136,11 @@ test('validation', function (t) {
     t.test('input coerce to pipes array (pass)', function (t) {
         t.plan(2);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'array',
-            items: 'string',
+            items: { type: 'string' },
             collectionFormat: 'pipes'
         })('a|b|c', function (error, value) {
             t.ok(!error, 'no error.');
@@ -147,7 +151,7 @@ test('validation', function (t) {
     t.test('input coerce to boolean (pass)', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'boolean'
@@ -159,7 +163,7 @@ test('validation', function (t) {
     t.test('input coerce to string (pass)', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'string'
@@ -171,7 +175,7 @@ test('validation', function (t) {
     t.test('input fail (bad type)', function (t) {
         t.plan(1);
 
-        validation(tv4, {
+        validator.make({
             name: 'id',
             required: true,
             type: 'integer'
