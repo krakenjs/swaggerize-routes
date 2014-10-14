@@ -23,6 +23,17 @@ test('configure', function (t) {
         }, 'throws exception.');
     });
 
+    t.test('bad api definition', function (t) {
+        t.plan(1);
+
+        t.throws(function () {
+            swaggerize({
+                api: require('./fixtures/defs/badapi.json'),
+                basedir: path.join(__dirname, './fixtures')
+            });
+        }, 'throws exception.');
+    });
+
     t.test('api', function (t) {
         t.plan(2);
 
@@ -49,7 +60,7 @@ test('additional schemas', function (t) {
                 schemas: [
                     'a', 'b', 'c'
                 ]
-            })
+            });
         });
     });
 
@@ -63,7 +74,7 @@ test('additional schemas', function (t) {
                 schemas: [
                     {}
                 ]
-            })
+            });
         });
     });
 
@@ -77,7 +88,7 @@ test('additional schemas', function (t) {
                 schemas: [
                     {name: 'models'}
                 ]
-            })
+            });
         });
     });
 
@@ -91,7 +102,7 @@ test('additional schemas', function (t) {
                 schemas: [
                     {name: 'models', schema: 1}
                 ]
-            })
+            });
         });
     });
 
@@ -105,41 +116,8 @@ test('additional schemas', function (t) {
                 schemas: [
                     {name: '#', schema: {}}
                 ]
-            })
+            });
         });
     });
 
-    t.test('adds schema by path', function (t) {
-        t.plan(2);
-
-        var options = {
-            api: require('./fixtures/defs/pets.json'),
-            basedir: path.join(__dirname, './fixtures'),
-            schemas: [
-                {name: 'models', schema: path.join(__dirname, './fixtures/defs/models.json') }
-            ]
-        };
-
-        var routes = swaggerize(options);
-
-        t.ok(options.schemaValidator, 'has schemaValidator.');
-        t.ok(options.schemaValidator.getSchema('models'), 'addition schema added.');
-    });
-
-    t.test('adds schema by object', function (t) {
-        t.plan(2);
-
-        var options = {
-            api: require('./fixtures/defs/pets.json'),
-            basedir: path.join(__dirname, './fixtures'),
-            schemas: [
-                {name: 'models', schema: {} }
-            ]
-        };
-
-        var routes = swaggerize(options);
-
-        t.ok(options.schemaValidator, 'has schemaValidator.');
-        t.ok(options.schemaValidator.getSchema('models'), 'addition schema added.');
-    });
 });
