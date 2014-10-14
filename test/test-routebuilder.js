@@ -8,11 +8,9 @@ test('routebuilder', function (t) {
     var routes, schemaValidator, api;
 
     api = require('./fixtures/defs/pets.json');
-    schemaValidator = require('tv4').freshApi();
-    schemaValidator.addSchema('#', api);
 
     t.test('build directory', function (t) {
-        routes = buildroutes({ api: api, handlers: path.join(__dirname, 'fixtures/handlers'), schemaValidator: schemaValidator });
+        routes = buildroutes({ api: api, handlers: path.join(__dirname, 'fixtures/handlers')});
 
         t.strictEqual(routes.length, 4, 'added 4 routes.');
 
