@@ -16,12 +16,12 @@ test('routebuilder', function (t) {
 
         routes.forEach(function (route) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has method property.');
+            t.ok(route.hasOwnProperty('description'), 'has validate property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
             t.ok(route.hasOwnProperty('validators'), 'has before property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has method property.');
+            t.ok(route.hasOwnProperty('produces'), 'has validate property.');
         });
 
         t.end();
@@ -47,12 +47,12 @@ test('routebuilder', function (t) {
 
         routes.forEach(function (route) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has method property.');
+            t.ok(route.hasOwnProperty('description'), 'has validate property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('validators'), 'has before property.');
+            t.ok(route.hasOwnProperty('validators'), 'has validators property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has method property.');
+            t.ok(route.hasOwnProperty('produces'), 'has produces property.');
         });
 
         t.end();
@@ -65,6 +65,7 @@ test('routebuilder', function (t) {
 
         t.strictEqual(route.validators.length, 1, 'has a validator.');
         t.ok(typeof route.validators[0].parameter === 'object', 'has parameter object property.');
+        t.ok(typeof route.validators[0].schema === 'object', 'has schema object property.');
         t.ok(typeof route.validators[0].validate === 'function', 'has validate fn property.');
 
         route.validators[0].validate({
