@@ -17,7 +17,7 @@ test('validation', function (t) {
             name: 'id',
             required: true,
             type: 'integer'
-        })(1, function (error) {
+        }).validate(1, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -29,7 +29,7 @@ test('validation', function (t) {
             name: 'id',
             required: true,
             type: 'integer'
-        })(undefined, function (error) {
+        }).validate(undefined, function (error) {
             t.ok(error, 'error.');
         });
     });
@@ -41,7 +41,7 @@ test('validation', function (t) {
             name: 'id',
             required: false,
             type: 'integer'
-        })(undefined, function (error) {
+        }).validate(undefined, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -56,7 +56,7 @@ test('validation', function (t) {
             schema: {
                 '$ref': '#/definitions/Pet'
             }
-        })({}, function (error) {
+        }).validate({}, function (error) {
             t.ok(error, 'no error.');
         });
     });
@@ -68,7 +68,7 @@ test('validation', function (t) {
             name: 'id',
             required: true,
             type: 'float'
-        })('1.0', function (error) {
+        }).validate('1.0', function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -80,7 +80,7 @@ test('validation', function (t) {
             name: 'id',
             required: true,
             type: 'byte'
-        })('a', function (error) {
+        }).validate('a', function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -95,7 +95,7 @@ test('validation', function (t) {
             items:  {
                 type: 'string'
             }
-        })('a,b,c', function (error, value) {
+        }).validate('a,b,c', function (error, value) {
             t.ok(!error, 'no error.');
             t.ok(thing.isArray(value), 'coerced to array.');
         });
@@ -112,7 +112,7 @@ test('validation', function (t) {
                 type: 'string'
             },
             collectionFormat: 'ssv'
-        })('a b c', function (error, value) {
+        }).validate('a b c', function (error, value) {
             t.ok(!error, 'no error.');
             t.ok(thing.isArray(value), 'coerced to array.');
         });
@@ -127,7 +127,7 @@ test('validation', function (t) {
             type: 'array',
             items: { type: 'string' },
             collectionFormat: 'tsv'
-        })('a\tb\tc', function (error, value) {
+        }).validate('a\tb\tc', function (error, value) {
             t.ok(!error, 'no error.');
             t.ok(thing.isArray(value), 'coerced to array.');
         });
@@ -142,7 +142,7 @@ test('validation', function (t) {
             type: 'array',
             items: { type: 'string' },
             collectionFormat: 'pipes'
-        })('a|b|c', function (error, value) {
+        }).validate('a|b|c', function (error, value) {
             t.ok(!error, 'no error.');
             t.ok(thing.isArray(value), 'coerced to array.');
         });
@@ -155,7 +155,7 @@ test('validation', function (t) {
             name: 'id',
             required: true,
             type: 'boolean'
-        })(1, function (error) {
+        }).validate(1, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -167,7 +167,7 @@ test('validation', function (t) {
             name: 'id',
             required: true,
             type: 'string'
-        })(1, function (error) {
+        }).validate(1, function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -179,7 +179,7 @@ test('validation', function (t) {
             name: 'id',
             required: true,
             type: 'integer'
-        })('hello', function (error) {
+        }).validate('hello', function (error) {
             t.ok(error, 'error.');
         });
     });
