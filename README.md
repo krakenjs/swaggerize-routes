@@ -2,15 +2,13 @@
 
 # swaggerize-builder
 
-- **Stability:** `stable`
-- **Changelog:** [https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md](https://github.com/krakenjs/swaggerize-builder/blob/master/CHANGELOG.md)
-
-`swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) for parsing and building route definitions based on a [Swagger document](https://github.com/wordnik/swagger-spec/blob/master/versions/2.0.md).
+`swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) and [swaggerize-hapi](https://github.com/krakenjs/swaggerize-hapi) for parsing and building route definitions based on a [Swagger 2.0 document](https://github.com/wordnik/swagger-spec/blob/master/versions/2.0.md).
 
 `swaggerize-builder` provides the following features:
 
 - Schema validation.
 - Building route definitions from a Swagger 2.0 document.
+- Validation helpers for input parameters.
 
 ### Usage
 
@@ -34,6 +32,8 @@ Options:
 
 ### Handlers Directory
 
+The `options.handlers` option specifies a directory to scan for handlers. These handlers are bound to the api `paths` defined in the swagger document.
+
 ```
 handlers
   |--foo
@@ -42,7 +42,7 @@ handlers
   |--baz.js
 ```
 
-Routes as:
+Will route as:
 
 ```
 foo.js => /foo
@@ -52,7 +52,7 @@ baz.js => /baz
 
 ### Path Parameters
 
-The file and directory names in the handlers directory can represent path parameters.
+The file and directory names in the handlers directory can also represent path parameters.
 
 For example, to represent the path `/users/{id}`:
 
@@ -62,7 +62,7 @@ handlers
   |    |--{id}.js
 ```
 
-This works with sub-resources as well:
+This works with directory names as well:
 
 ```shell
 handlers
@@ -76,7 +76,9 @@ To represent `/users/{id}/foo`.
 
 ### Handlers File
 
-Each provided javascript file should follow the format of:
+Each provided javascript file should export an object containing functions with HTTP verbs as keys.
+
+Example:
 
 ```javascript
 module.exports = {
@@ -86,11 +88,16 @@ module.exports = {
 }
 ```
 
-Where each http method has a handler for the target framework (e.g. express).
+Where the function signature is a handler for the target framework (e.g. `express` or `hapi`).
 
 ### Handlers Object
 
-The directory generation will yield this object, but it can be provided directly as `options.handlers` as well:
+The directory generation will yield this object, but it can be provided directly as `options.handlers`.
+
+Note that if you are programatically constructing a handlers obj this way, you must namespace HTTP verbs with `$` to
+avoid conflicts with path names. These keys should also be *lowercase*.
+
+Example:
 
 ```javascript
 {
@@ -105,9 +112,6 @@ The directory generation will yield this object, but it can be provided directly
 }
 ```
 
-Note that if you are programatically constructing a handlers obj, you must namespace *http methods* with `$` to
-avoid conflicts with path names. These keys should also be *lowercase*.
-
 Handler keys in files do *not* have to be namespaced in this way.
 
 ### Route Object
@@ -118,7 +122,7 @@ The `routes` array returned from the call to the builder will contain `route` ob
 - `name` - same as `operationId` in `api` definition.
 - `description` - same as `description` in `path` for `api` definition.
 - `method` - same as `method` from `api` `operation` definition.
-- `validators` - a validation object created from each `parameter` on the `operation`.
+- `validators` - an array of validation objects created from each `parameter` on the `operation`.
 - `handler` - a handler function appropriate to the target framework (e.g express).
 - `produces` - same as `produces` in `path` for `api` definition.
 
@@ -128,3 +132,4 @@ The validator object in the `validators` array will have the following propertie
 
 - `parameter` - same as the `parameter` from the operation on `path`.
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
+- `schema` - the `joi` schema being validated against.
