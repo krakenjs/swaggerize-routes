@@ -128,13 +128,3 @@ The validator object in the `validators` array will have the following propertie
 
 - `parameter` - same as the `parameter` from the operation on `path`.
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
-
-### Contribution
-
-In order to run the swaggerize-builder unit tests, execute the following commands:
-
-```bash
-$ git submodule update --init --recursive
-$ npm install
-$ npm test
-```
