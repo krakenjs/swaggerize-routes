@@ -121,3 +121,53 @@ test('additional schemas', function (t) {
     });
 
 });
+
+
+test('handlers', function (t) {
+
+    t.test('absolute path', function(t) {
+        t.plan(1);
+
+        t.doesNotThrow(function () {
+            swaggerize({
+                api: require('./fixtures/defs/pets.json'),
+                handlers: path.join(__dirname, './fixtures/handlers')
+            });
+        });
+    });
+
+    t.test('relative path', function(t) {
+        t.plan(1);
+
+        t.doesNotThrow(function () {
+            swaggerize({
+                api: require('./fixtures/defs/pets.json'),
+                handlers: './fixtures/handlers'
+            });
+        });
+    });
+
+    t.test('relative path with basedir', function(t) {
+        t.plan(1);
+
+        t.doesNotThrow(function () {
+            swaggerize({
+                api: require('./fixtures/defs/pets.json'),
+                basedir: path.join(__dirname, './fixtures'),
+                handlers: './handlers'
+            });
+        });
+    });
+
+    t.test('basedir with no handlers property', function(t) {
+        t.plan(1);
+
+        t.doesNotThrow(function () {
+            swaggerize({
+                api: require('./fixtures/defs/pets.json'),
+                basedir: path.join(__dirname, './fixtures')
+            });
+        });
+    });
+
+});
