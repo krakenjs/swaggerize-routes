@@ -147,6 +147,17 @@ test('handlers', function (t) {
         });
     });
 
+    t.test('empty path', function(t) {
+        t.plan(1);
+
+        t.throws(function () {
+            swaggerize({
+                api: require('./fixtures/defs/pets.json'),
+                handlers: ''
+            });
+        });
+    });
+
     t.test('relative path with basedir', function(t) {
         t.plan(1);
 
@@ -169,5 +180,19 @@ test('handlers', function (t) {
             });
         });
     });
+
+    t.test('handlers as object', function(t) {
+        t.plan(1);
+
+        t.doesNotThrow(function () {
+            swaggerize({
+                api: require('./fixtures/defs/pets.json'),
+                handlers: {
+                    $get: function () {}
+                }
+            });
+        });
+    });
+
 
 });
