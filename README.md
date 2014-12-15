@@ -1,6 +1,9 @@
-[![Build Status](https://travis-ci.org/krakenjs/swaggerize-builder.png)](https://travis-ci.org/krakenjs/swaggerize-builder) [![NPM version](https://badge.fury.io/js/swaggerize-builder.png)](http://badge.fury.io/js/swaggerize-builder)
+swaggerize-builder
+==================
 
-# swaggerize-builder
+Lead Maintainer: [Trevor Livingston](https://github.com/tlivings/)  
+
+[![Build Status](https://travis-ci.org/krakenjs/swaggerize-builder.svg?branch=master)](https://travis-ci.org/krakenjs/swaggerize-builder)   [![NPM version](https://badge.fury.io/js/swaggerize-builder.png)](http://badge.fury.io/js/swaggerize-builder)  
 
 `swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) and [swaggerize-hapi](https://github.com/krakenjs/swaggerize-hapi) for parsing and building route definitions based on a [Swagger 2.0 document](https://github.com/wordnik/swagger-spec/blob/master/versions/2.0.md).
 
