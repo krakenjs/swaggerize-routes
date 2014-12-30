@@ -32,6 +32,16 @@ test('validation', function (t) {
         });
     });
 
+    t.test('$ref default resolves to root schema', function (t) {
+        t.plan(1);
+
+        validator.make({
+            $ref: '/parameters/id'
+        }).validate(1, function (error) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('failed to make validator with bad $ref', function (t) {
         t.plan(1);
 
