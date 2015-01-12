@@ -1,6 +1,6 @@
 {
   "name": "swaggerize-builder",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "author": "Trevor Livingston <trlivingston@paypal.com>",
   "description": "Swagger based route building.",
   "main": "./lib/index",
