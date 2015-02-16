@@ -216,3 +216,45 @@ test('validation', function (t) {
     });
 
 });
+
+
+test('named validation', function (t) {
+
+  var validator = validation({
+    api: require('./fixtures/defs/pets.json'),
+    useNamedValidators: true
+  });
+
+
+  t.test('input fail (not present) includes parameter name', function (t) {
+    t.plan(2);
+
+    var parameterName = 'test_parameter_name_missing_required';
+
+    validator.make({
+      name: parameterName,
+      required: true,
+      type: 'integer'
+    }).validate(undefined, function (error) {
+      t.ok(error.message.indexOf(parameterName) >= 0, 'Expected error.message to contain ' + parameterName);
+      t.ok(error, 'error.');
+    });
+  });
+
+
+  t.test('input fail (bad type)', function (t) {
+    t.plan(2);
+
+    var parameterName = 'test_parameter_name_wrong_type';
+
+    validator.make({
+      name: parameterName,
+      required: true,
+      type: 'integer'
+    }).validate('hello', function (error) {
+      t.ok(error.message.indexOf(parameterName) >= 0, 'Expected error.message to contain ' + parameterName);
+      t.ok(error, 'error.');
+    });
+  });
+
+});
