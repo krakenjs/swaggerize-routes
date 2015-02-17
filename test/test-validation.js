@@ -221,10 +221,8 @@ test('validation', function (t) {
 test('named validation', function (t) {
 
   var validator = validation({
-    api: require('./fixtures/defs/pets.json'),
-    useNamedValidators: true
+    api: require('./fixtures/defs/pets.json')
   });
-
 
   t.test('input fail (not present) includes parameter name', function (t) {
     t.plan(2);
@@ -236,11 +234,10 @@ test('named validation', function (t) {
       required: true,
       type: 'integer'
     }).validate(undefined, function (error) {
-      t.ok(error.message.indexOf(parameterName) >= 0, 'Expected error.message to contain ' + parameterName);
       t.ok(error, 'error.');
+      t.ok(error.message.indexOf(parameterName) >= 0, 'Expected error.message to contain ' + parameterName);
     });
   });
-
 
   t.test('input fail (bad type)', function (t) {
     t.plan(2);
@@ -252,8 +249,48 @@ test('named validation', function (t) {
       required: true,
       type: 'integer'
     }).validate('hello', function (error) {
-      t.ok(error.message.indexOf(parameterName) >= 0, 'Expected error.message to contain ' + parameterName);
       t.ok(error, 'error.');
+      t.ok(error.message.indexOf(parameterName) >= 0, 'Expected error.message to contain ' + parameterName);
+    });
+  });
+
+  t.test('input fail (not present) - parameter name in each details.message', function (t) {
+
+    var parameterName = 'test_details_message_contains_parameter';
+
+    validator.make({
+      name: parameterName,
+      required: true,
+      type: 'integer'
+    }).validate(undefined, function (error) {
+
+      var numErrorDetails = error.details.length;
+
+      t.plan(numErrorDetails + 1);
+      t.ok(error, 'error.');
+      error.details.forEach(function (detail) {
+        t.ok(detail.message.indexOf(parameterName) >= 0, 'Expected error.details.message to contain ' + parameterName);
+      });
+    });
+  });
+
+  t.test('input fail (not present) - parameter name in each details.path', function (t) {
+
+    var parameterName = 'test_details_path_equals_parameter';
+
+    validator.make({
+      name: parameterName,
+      required: true,
+      type: 'integer'
+    }).validate(undefined, function (error) {
+
+      var numErrorDetails = error.details.length;
+
+      t.plan(numErrorDetails + 1);
+      t.ok(error, 'error.');
+      error.details.forEach(function (detail) {
+        t.ok(detail.path === parameterName, 'Expected error.details.path to equal ' + parameterName);
+      });
     });
   });
 

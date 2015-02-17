@@ -46,18 +46,6 @@ test('configure', function (t) {
         t.strictEqual(routes.length, 4, 'routes.length 4.');
     });
 
-    t.test('fail bad useNamedValidators value', function (t) {
-      t.plan(1);
-
-      t.throws(function () {
-        swaggerize({
-          api: require('./fixtures/defs/pets.json'),
-          basedir: path.join(__dirname, './fixtures'),
-          useNamedValidators: 'true'
-        });
-      }, 'throws exception.');
-    });
-
 });
 
 test('additional schemas', function (t) {
