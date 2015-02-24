@@ -27,6 +27,24 @@ test('routebuilder', function (t) {
         t.end();
     });
 
+    t.test('build from extensions', function (t) {
+        routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures'), 'schema-extensions': true});
+
+        t.strictEqual(routes.length, 2, 'added 1 routes.');
+
+        routes.forEach(function (route) {
+            t.ok(route.hasOwnProperty('method'), 'has method property.');
+            t.ok(route.hasOwnProperty('description'), 'has validate property.');
+            t.ok(route.hasOwnProperty('name'), 'has name property.');
+            t.ok(route.hasOwnProperty('path'), 'has path property.');
+            t.ok(route.hasOwnProperty('validators'), 'has before property.');
+            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
+            t.ok(route.hasOwnProperty('produces'), 'has validate property.');
+        });
+
+        t.end();
+    });
+
     t.test('build with object', function (t) {
         routes = buildroutes({
             api: api,
@@ -78,7 +96,6 @@ test('routebuilder', function (t) {
             id: 0,
             name: 'Cat'
         }, function (error, newvalue) {
-            console.log(error);
             t.ok(!error, 'validation passed.');
         });
 

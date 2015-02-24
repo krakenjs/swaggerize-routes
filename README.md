@@ -1,14 +1,14 @@
-swaggerize-builder
+swaggerize-routes
 ==================
 
 Lead Maintainer: [Trevor Livingston](https://github.com/tlivings/)  
 
-[![Build Status](https://travis-ci.org/krakenjs/swaggerize-builder.svg?branch=master)](https://travis-ci.org/krakenjs/swaggerize-builder)   
-[![NPM version](https://badge.fury.io/js/swaggerize-builder.png)](http://badge.fury.io/js/swaggerize-builder)  
+[![Build Status](https://travis-ci.org/krakenjs/swaggerize-routes.svg?branch=master)](https://travis-ci.org/krakenjs/swaggerize-routes)
+[![NPM version](https://badge.fury.io/js/swaggerize-routes.png)](http://badge.fury.io/js/swaggerize-routes)  
 
-`swaggerize-builder` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) and [swaggerize-hapi](https://github.com/krakenjs/swaggerize-hapi) for parsing and building route definitions based on a [Swagger 2.0 document](https://github.com/wordnik/swagger-spec/blob/master/versions/2.0.md).
+`swaggerize-routes` is a component used by [swaggerize-express](https://github.com/krakenjs/swaggerize-express) and [swaggerize-hapi](https://github.com/krakenjs/swaggerize-hapi) for parsing and building route definitions based on a [Swagger 2.0 document](https://github.com/wordnik/swagger-spec/blob/master/versions/2.0.md).
 
-`swaggerize-builder` provides the following features:
+`swaggerize-routes` provides the following features:
 
 - Schema validation.
 - Building route definitions from a Swagger 2.0 document.
@@ -17,7 +17,7 @@ Lead Maintainer: [Trevor Livingston](https://github.com/tlivings/)
 ### Usage
 
 ```javascript
-var builder = require('swaggerize-builder');
+var builder = require('swaggerize-routes');
 
 var routes = builder({
     api: require('./api.json'),
@@ -31,6 +31,7 @@ Options:
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 - `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
 - `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
+- `schema-extensions` - enable `x-<property>` style Swagger schema extensions (such as `x-handler`).
 
 **Returns:** An array of the processed routes.
 
@@ -77,6 +78,36 @@ handlers
 ```
 
 To represent `/users/{id}/foo`.
+
+### Schema Extensions for Handlers
+
+An alternative to automatically determining handlers based on a directory structure, handlers can be specified for both paths and/or operations.
+
+Enable the `swaggerize-router` option `schema-extensions` to `true`, and specify handler locations (relative to basepath) in the swagger document.
+
+Example:
+
+```json
+{
+
+    "/pets": {
+        "x-handler": "handlers/pets.js"
+    }
+}
+```
+
+Or at the operation level:
+
+```json
+{
+
+    "/pets": {
+        "GET": {
+            "x-handler": "handlers/pets.js"
+        }
+    }
+}
+```
 
 ### Handlers File
 
