@@ -88,7 +88,7 @@ test('validation', function (t) {
                 '$ref': '#/definitions/Pet'
             }
         }).validate({}, function (error) {
-            t.ok(error, 'no error.');
+            t.ok(error, 'error.');
         });
     });
 

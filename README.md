@@ -157,6 +157,7 @@ The `routes` array returned from the call to the builder will contain `route` ob
 - `name` - same as `operationId` in `api` definition.
 - `description` - same as `description` in `path` for `api` definition.
 - `method` - same as `method` from `api` `operation` definition.
+- `security` - the security defintion for this route, either pulled from the operation level or path level.
 - `validators` - an array of validation objects created from each `parameter` on the `operation`.
 - `handler` - a handler function appropriate to the target framework (e.g express).
 - `produces` - same as `produces` in `path` for `api` definition.

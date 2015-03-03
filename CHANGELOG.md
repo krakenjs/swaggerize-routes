@@ -1,6 +1,7 @@
 ### 1.0.0 (renamed to swaggerize-routes)
 
 - Alternately specify `x-handler` properties to reference handlers at either the operation or path level.
+- Added security definitions to route.
 
 ### 2.0.0
 

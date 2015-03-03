@@ -30,7 +30,7 @@ test('routebuilder', function (t) {
     t.test('build from extensions', function (t) {
         routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures'), 'schema-extensions': true});
 
-        t.strictEqual(routes.length, 2, 'added 1 routes.');
+        t.strictEqual(routes.length, 2, 'added 2 routes.');
 
         routes.forEach(function (route) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
