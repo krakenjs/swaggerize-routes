@@ -31,7 +31,6 @@ Options:
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 - `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
 - `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
-- `schema-extensions` - enable `x-<property>` style Swagger schema extensions (such as `x-handler`).
 
 **Returns:** An array of the processed routes.
 
@@ -83,8 +82,6 @@ To represent `/users/{id}/foo`.
 
 An alternative to automatically determining handlers based on a directory structure, handlers can be specified for both paths and/or operations.
 
-Enable the `swaggerize-router` option `schema-extensions` to `true`, and specify handler locations (relative to basepath) in the swagger document.
-
 Example:
 
 ```json
@@ -109,6 +106,10 @@ Or at the operation level:
 }
 ```
 
+These paths are relative to the `options.basedir` and are used as fallbacks for missing handlers from directory scan.
+
+If the `options.handlers` is empty, then they will be used exclusively.
+
 ### Handlers File
 
 Each provided javascript file should export an object containing functions with HTTP verbs as keys.
@@ -124,6 +125,16 @@ module.exports = {
 ```
 
 Where the function signature is a handler for the target framework (e.g. `express` or `hapi`).
+
+Handlers specified by `x-handler` can also be of the form:
+
+```javascript
+module.exports = function (...) {
+    ...
+};
+```
+
+In the case where a different `x-handler` file is specified for each operation.
 
 ### Handlers Object
 

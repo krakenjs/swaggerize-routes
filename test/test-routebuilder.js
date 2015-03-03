@@ -27,8 +27,8 @@ test('routebuilder', function (t) {
         t.end();
     });
 
-    t.test('build from extensions', function (t) {
-        routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures'), 'schema-extensions': true});
+    t.test('build from x-handler', function (t) {
+        routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures')});
 
         t.strictEqual(routes.length, 2, 'added 2 routes.');
 

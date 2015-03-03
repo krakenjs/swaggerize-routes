@@ -25,11 +25,11 @@
     ],
     "paths": {
         "/pets": {
-            "x-handler": "handlers/pets.js",
+            "x-handler": "extensions/pets.js",
             "get": {
                 "description": "Returns all pets from the system that the user has access to",
                 "operationId": "findPets",
-                "x-handler": "handlers/pets.js",
+                "x-handler": "extensions/pets.js",
                 "produces": [
                     "application/json",
                     "application/xml",
