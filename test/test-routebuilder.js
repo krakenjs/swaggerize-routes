@@ -71,6 +71,7 @@ test('routebuilder', function (t) {
             t.ok(route.hasOwnProperty('validators'), 'has validators property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
             t.ok(route.hasOwnProperty('produces'), 'has produces property.');
+            t.ok(route.hasOwnProperty('consumes'), 'has consumes property.');
         });
 
         t.end();

@@ -1,4 +1,4 @@
-swaggerize-routes
+swaggerize-routes (formerly swaggerize-builder)
 ==================
 
 Lead Maintainer: [Trevor Livingston](https://github.com/tlivings/)  
@@ -160,7 +160,8 @@ The `routes` array returned from the call to the builder will contain `route` ob
 - `security` - the security defintion for this route, either pulled from the operation level or path level.
 - `validators` - an array of validation objects created from each `parameter` on the `operation`.
 - `handler` - a handler function appropriate to the target framework (e.g express).
-- `produces` - same as `produces` in `path` for `api` definition.
+- `consumes` - same as `consumes` in `api` definition.
+- `produces` - same as `produces` in `api` definition.
 
 ### Validator Object
 
