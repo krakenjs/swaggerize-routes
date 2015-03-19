@@ -181,3 +181,12 @@ The validator object in the `validators` array will have the following propertie
 - `parameter` - same as the `parameter` from the operation on `path`.
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
 - `schema` - the `joi` schema being validated against.
+
+### Security Object
+
+The security object in the `route` is an object containing keys corresponding to names found under the [Swagger Security Definitions](https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md#securityDefinitionsObject).
+
+Under each key will be an object containing the following properties:
+
+- `scopes` - an array of scopes accepted for this route.
+- `authorize` - a function that may be provided by defining a `x-authorize` attribute to the security definition.

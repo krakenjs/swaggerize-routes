@@ -10,7 +10,7 @@ test('routebuilder', function (t) {
     api = require('./fixtures/defs/pets.json');
 
     t.test('build directory', function (t) {
-        routes = buildroutes({ api: api, handlers: path.join(__dirname, 'fixtures/handlers')});
+        routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures'), handlers: path.join(__dirname, 'fixtures/handlers')});
 
         t.strictEqual(routes.length, 4, 'added 4 routes.');
 
@@ -19,6 +19,7 @@ test('routebuilder', function (t) {
             t.ok(route.hasOwnProperty('description'), 'has validate property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
+            t.ok(route.hasOwnProperty('security'), 'has security property.');
             t.ok(route.hasOwnProperty('validators'), 'has before property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
             t.ok(route.hasOwnProperty('produces'), 'has validate property.');
@@ -37,6 +38,7 @@ test('routebuilder', function (t) {
             t.ok(route.hasOwnProperty('description'), 'has validate property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
+            t.ok(route.hasOwnProperty('security'), 'has security property.');
             t.ok(route.hasOwnProperty('validators'), 'has before property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
             t.ok(route.hasOwnProperty('produces'), 'has validate property.');
@@ -48,6 +50,7 @@ test('routebuilder', function (t) {
     t.test('build with object', function (t) {
         routes = buildroutes({
             api: api,
+            basedir: path.join(__dirname, 'fixtures'),
             handlers: {
                 'pets': {
                     $get: function () {},
@@ -68,6 +71,7 @@ test('routebuilder', function (t) {
             t.ok(route.hasOwnProperty('description'), 'has validate property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
+            t.ok(route.hasOwnProperty('security'), 'has security property.');
             t.ok(route.hasOwnProperty('validators'), 'has validators property.');
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
             t.ok(route.hasOwnProperty('produces'), 'has produces property.');
@@ -101,6 +105,18 @@ test('routebuilder', function (t) {
         });
 
         t.end();
+    });
+
+    t.test('security definitions', function (t) {
+        var route;
+
+        t.plan(3);
+
+        route = routes[1];
+        
+        t.ok(route.security, 'has security definition');
+        t.ok(route.security.default && Array.isArray(route.security.default.scopes), 'has scopes.');
+        t.ok(route.security.default && typeof route.security.default.authorize === 'function', 'has an authorize function.');
     });
 
     t.test('bad dir', function (t) {
