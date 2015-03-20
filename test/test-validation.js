@@ -32,6 +32,25 @@ test('validation', function (t) {
         });
     });
 
+    t.test('input pass with pattern', function (t) {
+        t.plan(2);
+
+        var functionnalValidator = validator.make({
+            name: 'id',
+            required: true,
+            type: 'string',
+            pattern: '[0-9]+'
+        });
+
+        functionnalValidator.validate('1', function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        functionnalValidator.validate('abc', function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
     t.test('$ref default resolves to root schema', function (t) {
         t.plan(1);
 
