@@ -234,6 +234,24 @@ test('validation', function (t) {
         });
     });
 
+  t.test('input ignore extra value', function(t) {
+    t.plan(4);
+
+    var v = validator.make(require('./fixtures/defs/pets.json').definitions.Pet);
+
+    v.schema._settings = {
+      allowUnknown: true,
+      stripUnknown: true
+    };
+
+    v.validate({ id: 1, name: 'fluffy', extra: 'foo'}, function(error, result) {
+        t.ok(!error, 'no error.');
+        t.ok(result.id === 1, 'Has id with value of 1')
+        t.ok(result.name === 'fluffy', 'Has name with value of "fluffy"')
+        t.ok(!result.extra, 'No extra properties')
+    });
+  });
+
 });
 
 
