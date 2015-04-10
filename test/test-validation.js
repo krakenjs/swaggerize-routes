@@ -107,7 +107,7 @@ test('validation', function (t) {
                 '$ref': '#/definitions/Pet'
             }
         }).validate({}, function (error) {
-            t.ok(error, 'no error.');
+            t.ok(error, 'error.');
         });
     });
 
@@ -233,6 +233,22 @@ test('validation', function (t) {
             t.ok(error, 'error.');
         });
     });
+
+  t.test('input ignore extra value', function(t) {
+    t.plan(2);
+
+    var v = validator.make(require('./fixtures/defs/pets.json').definitions.Pet);
+
+    v.schema._settings = {
+      allowUnknown: true,
+      stripUnknown: true
+    };
+
+    v.validate({ id: 1, name: 'fluffy', extra: 'foo'}, function(error, result) {
+        t.ok(!error, 'no error.');
+        t.ok(!result.extra, 'No extra properties')
+    });
+  });
 
 });
 
