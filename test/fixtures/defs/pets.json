@@ -33,13 +33,11 @@
                 "produces": [
                     "application/json"
                 ],
-                "security": {
-                    "default": {
-                        "scopes": [
-                            "read"
-                        ]
+                "security": [
+                    {
+                        "default": ["read"]
                     }
-                },
+                ],
                 "parameters": [
                     {
                         "name": "tags",
@@ -85,13 +83,11 @@
                 "produces": [
                     "application/json"
                 ],
-                "security": {
-                    "default": {
-                        "scopes": [
-                            "write"
-                        ]
+                "security": [
+                    {
+                        "default": ["write"]
                     }
-                },
+                ],
                 "parameters": [
                     {
                         "name": "pet",
@@ -126,13 +122,11 @@
                 "produces": [
                     "application/json"
                 ],
-                "security": {
-                    "default": {
-                        "scopes": [
-                            "read"
-                        ]
+                "security": [
+                    {
+                        "default": ["read"]
                     }
-                },
+                ],
                 "parameters": [
                     {
                         "$ref": "#/parameters/id"
@@ -156,13 +150,11 @@
             "delete": {
                 "description": "deletes a single pet based on the ID supplied",
                 "operationId": "deletePet",
-                "security": {
-                    "default": {
-                        "scopes": [
-                            "write"
-                        ]
+                "security": [
+                    {
+                        "default": ["write"]
                     }
-                },
+                ],
                 "parameters": [
                     {
                         "$ref": "#/parameters/id"
@@ -195,10 +187,10 @@
     "securityDefinitions": {
         "default": {
             "type": "oauth2",
-            "scopes": [
-                "read",
-                "write"
-            ],
+            "scopes": {
+                "read": "read pets.",
+                "write": "write pets."
+            },
             "x-authorize": "extensions/authorize_default.js"
         },
         "secondary": {

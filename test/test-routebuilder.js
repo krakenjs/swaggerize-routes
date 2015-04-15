@@ -113,7 +113,7 @@ test('routebuilder', function (t) {
         t.plan(3);
 
         route = routes[1];
-        
+
         t.ok(route.security, 'has security definition');
         t.ok(route.security.default && Array.isArray(route.security.default.scopes), 'has scopes.');
         t.ok(route.security.default && typeof route.security.default.authorize === 'function', 'has an authorize function.');
