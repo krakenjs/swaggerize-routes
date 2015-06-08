@@ -57,14 +57,18 @@ test('routebuilder', function (t) {
                     $post: function () {},
                     '{id}': {
                         $get: function () {},
-                        $delete: function () {}
+                        $delete: function () {},
+                        'items': {
+                            $get: function () {},
+                            $post: function () {}
+                        }
                     }
                 }
             },
             schemaValidator: schemaValidator
         });
 
-        t.strictEqual(routes.length, 4, 'added 4 routes.');
+        t.strictEqual(routes.length, 6, 'added 6 routes.');
 
         routes.forEach(function (route) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
@@ -103,6 +107,19 @@ test('routebuilder', function (t) {
         }, function (error, newvalue) {
             t.ok(!error, 'validation passed.');
         });
+
+        t.end();
+    });
+
+    t.test('route validator merge', function(t) {
+        var route;
+        route = routes[5];
+
+        t.strictEqual(route.validators.length, 3, 'has 3 validators.');
+
+        var validator;
+        validator = route.validators.filter(function (validator) {return validator.parameter.name === 'date'}).shift();
+        t.ok(validator.parameter.required, 'override by operation.');
 
         t.end();
     });

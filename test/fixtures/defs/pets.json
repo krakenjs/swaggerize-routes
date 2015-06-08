@@ -172,6 +172,100 @@
                     }
                 }
             }
+        },
+        "/pets/{id}/items": {
+            "get": {
+                "description": "Returns all pet's items based on the pet ID supplied.",
+                "operationId": "findItemOfPet",
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "default": ["read"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "maximum number of results to return",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "item response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Item"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new item for pet.",
+                "operationId": "createItemForPet",
+                "security": [
+                    {
+                        "default": ["write"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "Item to add to the store",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    },
+                    {
+                        "name": "date",
+                        "in": "header",
+                        "description": "Operation date",
+                        "required": true,
+                        "type": "string",
+                        "format": "dateTime"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "pet response",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {"$ref": "#/parameters/id"},
+                {
+                    "name": "date",
+                    "in": "header",
+                    "description": "Operation date",
+                    "required": false,
+                    "type": "string",
+                    "format": "dateTime"
+                }
+            ]
         }
     },
     "parameters": {
@@ -218,6 +312,26 @@
                     "type": "string"
                 },
                 "tag": {
+                    "type": "string"
+                }
+            }
+        },
+        "Item": {
+            "type": "object",
+            "required": [
+                "id",
+                "name",
+                "type"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }
