@@ -198,15 +198,33 @@ test('validation', function (t) {
         });
     });
 
-    t.test('input coerce to boolean (pass)', function (t) {
-        t.plan(1);
+    ['false', '0'].forEach(function(value) {
+        t.test('input coerce to boolean (pass) - value ' + value, function (t) {
+            t.plan(2);
 
-        validator.make({
-            name: 'id',
-            required: true,
-            type: 'boolean'
-        }).validate(1, function (error) {
-            t.ok(!error, 'no error.');
+            validator.make({
+                name: 'id',
+                required: true,
+                type: 'boolean'
+            }).validate(value, function (error, result) {
+                t.ok(!error, 'no error.');
+                t.equal(result, false);
+            });
+        });
+    });
+
+    ['true', '1'].forEach(function(value) {
+        t.test('input coerce to boolean (pass) - value ' + value, function (t) {
+            t.plan(2);
+
+            validator.make({
+                name: 'id',
+                required: true,
+                type: 'boolean'
+            }).validate(value, function (error, result) {
+                t.ok(!error, 'no error.');
+                t.equal(result, true);
+            });
         });
     });
 
