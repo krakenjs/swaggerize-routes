@@ -16,7 +16,8 @@
     "caller": "^0.0.1",
     "core-util-is": "^1.0.1",
     "debuglog": "^1.0.1",
-    "enjoi": "^1.0.0"
+    "enjoi": "^1.0.0",
+    "swagger-schema-official": "^2.0.0-96305d9"
   },
   "devDependencies": {
     "tape": "^2.4.2",
