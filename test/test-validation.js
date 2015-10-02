@@ -198,7 +198,7 @@ test('validation', function (t) {
         });
     });
 
-    ['false', '0'].forEach(function(value) {
+    ['false', '0', false].forEach(function(value) {
         t.test('input coerce to boolean (pass) - value ' + value, function (t) {
             t.plan(2);
 
@@ -213,7 +213,7 @@ test('validation', function (t) {
         });
     });
 
-    ['true', '1'].forEach(function(value) {
+    ['true', '1', true].forEach(function(value) {
         t.test('input coerce to boolean (pass) - value ' + value, function (t) {
             t.plan(2);
 
