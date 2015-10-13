@@ -12,6 +12,11 @@
   "engines": {
     "node": "0.10.x"
   },
+  "contributors":[{
+    "name" : "Francois-Guillaume Ribreau",
+    "email" : "npm@fgribreau.com",
+    "url" : "http://fgribreau.com/"
+  }],
   "dependencies": {
     "caller": "^0.0.1",
     "core-util-is": "^1.0.1",
