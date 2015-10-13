@@ -14,7 +14,7 @@ test('routebuilder', function (t) {
 
         t.strictEqual(routes.length, 4, 'added 4 routes.');
 
-        routes.forEach(function (route, i) {
+        routes.forEach(function (route) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
             t.ok(route.hasOwnProperty('description'), 'has validate property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
