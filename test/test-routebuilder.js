@@ -14,13 +14,18 @@ test('routebuilder', function (t) {
 
         t.strictEqual(routes.length, 4, 'added 4 routes.');
 
-        routes.forEach(function (route) {
+        routes.forEach(function (route, i) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
             t.ok(route.hasOwnProperty('description'), 'has validate property.');
             t.ok(route.hasOwnProperty('name'), 'has name property.');
             t.ok(route.hasOwnProperty('path'), 'has path property.');
             t.ok(route.hasOwnProperty('security'), 'has security property.');
             t.ok(route.hasOwnProperty('validators'), 'has before property.');
+            if(route.method === 'get' && route.path === '/pets'){
+              t.ok(route.jsonp === 'callback', 'options property is the right one.');
+              t.ok(route.cache.statuses.join(',') === '200', 'options property is the right one.');
+              t.ok(route.config.plugins.policies.join(', ') === 'isLoggedIn, addTracking, logThis', 'options property is the right one.');
+            }
             t.ok(route.hasOwnProperty('handler'), 'has handler property.');
             t.ok(route.hasOwnProperty('produces'), 'has validate property.');
         });

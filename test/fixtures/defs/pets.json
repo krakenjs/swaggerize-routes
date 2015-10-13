@@ -38,6 +38,15 @@
                         "default": ["read"]
                     }
                 ],
+                "jsonp": "callback",
+                "cache":{
+                  "statuses":[200]
+                },
+                "config": {
+                  "plugins": {
+                    "policies": ["isLoggedIn", "addTracking", "logThis"]
+                  }
+                },
                 "parameters": [
                     {
                         "name": "tags",
