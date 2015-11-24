@@ -2,6 +2,10 @@
   "name": "swaggerize-routes",
   "version": "1.0.5",
   "author": "Trevor Livingston <trlivingston@paypal.com>",
+  "contributors": [
+    "Trevor Livingston <trlivingston@paypal.com>",
+    "Subeesh Chothendavida <subeeshcbabu@yahoo.co.in>"
+  ],
   "description": "Swagger based route building.",
   "main": "./lib/index",
   "repository": {
@@ -10,18 +14,18 @@
   },
   "bugs": "http://github.com/krakenjs/swaggerize-builder/issues",
   "engines": {
-    "node": "0.10.x"
+    "node": "<=4.x"
   },
   "dependencies": {
-    "caller": "^0.0.1",
+    "caller": "^1.0.1",
     "core-util-is": "^1.0.1",
     "debuglog": "^1.0.1",
     "enjoi": "^1.0.0",
     "swagger-schema-official": "^2.0.0-"
   },
   "devDependencies": {
-    "tape": "^2.4.2",
-    "istanbul": "^0.2.3",
+    "tape": "^4.2.2",
+    "istanbul": "^0.4.0",
     "jshint": "^2.4.1"
   },
   "scripts": {
