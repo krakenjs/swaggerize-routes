@@ -274,7 +274,7 @@ test('validation', function (t) {
         validator.make({
             name: 'upload',
             type: 'file'
-        }, 'multipart/form-data').validate('data', function (error) {
+        }, ['multipart/form-data']).validate('data', function (error) {
             t.ok(!error, 'no error.');
         });
     });
@@ -285,7 +285,7 @@ test('validation', function (t) {
         validator.make({
             name: 'upload',
             type: 'file'
-        }, 'application/json').validate('data', function (error) {
+        }, ['application/json']).validate('data', function (error) {
             t.ok(error, 'error.');
         });
     });
