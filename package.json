@@ -2,10 +2,6 @@
   "name": "swaggerize-routes",
   "version": "1.0.6",
   "author": "Trevor Livingston <trlivingston@paypal.com>",
-  "contributors": [
-    "Trevor Livingston <trlivingston@paypal.com>",
-    "Subeesh Chothendavida <subeeshcbabu@yahoo.co.in>"
-  ],
   "description": "Swagger based route building.",
   "main": "./lib/index",
   "repository": {
@@ -17,10 +13,19 @@
     "node": "<=4.x"
   },
   "contributors":[{
-    "name" : "Francois-Guillaume Ribreau",
-    "email" : "npm@fgribreau.com",
-    "url" : "http://fgribreau.com/"
-  }],
+      "name" : "Francois-Guillaume Ribreau",
+      "email" : "npm@fgribreau.com",
+      "url" : "http://fgribreau.com/"
+    },
+    {
+      "name": "Trevor Livingston",
+      "email": "trlivingston@paypal.com"
+    },
+    {
+      "name": "Subeesh Chothendavida",
+      "email": "subeeshcbabu@yahoo.co.in"
+    }
+  ],
   "dependencies": {
     "caller": "^1.0.1",
     "core-util-is": "^1.0.1",
