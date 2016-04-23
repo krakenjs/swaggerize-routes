@@ -51,6 +51,25 @@ test('validation', function (t) {
         });
     });
 
+    [true, false].forEach(function(isRequired){
+        ['string', 'boolean', 'integer'].forEach(function(type){
+            var requiredInTitle = isRequired? 'required ': 'not required ';
+
+            t.test(requiredInTitle + type + ' param pass with allowEmptyValue', function(t){
+                t.plan(1);
+
+                validator.make({
+                    name: 'param',
+                    required: isRequired,
+                    type: type,
+                    allowEmptyValue: true
+                }).validate('', function(error){
+                    t.ok(!error, 'no error.');
+                });
+            });
+        });
+    });
+
     t.test('$ref default resolves to root schema', function (t) {
         t.plan(1);
 
