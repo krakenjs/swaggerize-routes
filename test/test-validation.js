@@ -273,7 +273,20 @@ test('validation', function (t) {
 
         validator.make({
             name: 'upload',
-            type: 'file'
+            type: 'file',
+            in: 'formData'
+        }, ['multipart/form-data']).validate('data', function (error) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+    t.test('formData field', function (t) {
+        t.plan(1);
+
+        validator.make({
+            name: 'user_name',
+            type: 'string',
+            in: 'formData'
         }, ['multipart/form-data']).validate('data', function (error) {
             t.ok(!error, 'no error.');
         });
@@ -284,7 +297,8 @@ test('validation', function (t) {
 
         validator.make({
             name: 'upload',
-            type: 'file'
+            type: 'file',
+            in: 'formData'
         }, ['application/json']).validate('data', function (error) {
             t.ok(error, 'error.');
         });
