@@ -15,19 +15,19 @@ test('routebuilder', function (t) {
         t.strictEqual(routes.length, 4, 'added 4 routes.');
 
         routes.forEach(function (route) {
-            t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has validate property.');
-            t.ok(route.hasOwnProperty('name'), 'has name property.');
-            t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('security'), 'has security property.');
-            t.ok(route.hasOwnProperty('validators'), 'has before property.');
+            t.notEqual(route.method, 'has method property.');
+            t.notEqual(route.description, undefined, 'has validate property.');
+            t.notEqual(route.name, undefined, 'has name property.');
+            t.notEqual(route.path, undefined, 'has path property.');
+            t.notEqual(route.security, undefined, 'has security property.');
+            t.notEqual(route.validators, undefined, 'has before property.');
             if(route.method === 'get' && route.path === '/pets'){
               t.ok(route.jsonp === 'callback', 'options property is the right one.');
               t.ok(route.cache.statuses.join(',') === '200', 'options property is the right one.');
               t.ok(route.config.plugins.policies.join(', ') === 'isLoggedIn, addTracking, logThis', 'options property is the right one.');
             }
-            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has validate property.');
+            t.notEqual(route.handler, undefined, 'has handler property.');
+            t.notEqual(route.produces, undefined, 'has validate property.');
         });
 
         t.end();
@@ -39,14 +39,14 @@ test('routebuilder', function (t) {
         t.strictEqual(routes.length, 2, 'added 2 routes.');
 
         routes.forEach(function (route) {
-            t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has validate property.');
-            t.ok(route.hasOwnProperty('name'), 'has name property.');
-            t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('security'), 'has security property.');
-            t.ok(route.hasOwnProperty('validators'), 'has before property.');
-            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has validate property.');
+            t.notEqual(route.method, undefined, 'has method property.');
+            t.notEqual(route.description, undefined, 'has validate property.');
+            t.notEqual(route.name, undefined, 'has name property.');
+            t.notEqual(route.path, undefined, 'has path property.');
+            t.notEqual(route.security, undefined, 'has security property.');
+            t.notEqual(route.validators, undefined, 'has before property.');
+            t.notEqual(route.handler, undefined, 'has handler property.');
+            t.notEqual(route.produces, undefined, 'has validate property.');
         });
 
         t.end();
@@ -164,15 +164,15 @@ test('routebuilder', function (t) {
         t.strictEqual(routes.length, 2, 'added 1 routes.');
 
         routes.forEach(function (route) {
-            t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has validate property.');
-            t.ok(route.hasOwnProperty('name'), 'has name property.');
-            t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('security'), 'has security property.');
-            t.ok(route.hasOwnProperty('validators'), 'has validators property.');
-            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has produces property.');
-            t.ok(route.hasOwnProperty('consumes'), 'has consumes property.');
+            t.notEqual(route.method, undefined, 'has method property.');
+            t.equal(route.description, undefined, 'has no description property.');
+            t.notEqual(route.name, undefined, 'has name property.');
+            t.notEqual(route.path, undefined, 'has path property.');
+            t.equal(route.security, undefined, 'has no security property.');
+            t.notEqual(route.validators, undefined, 'has validators property.');
+            t.notEqual(route.handler, undefined, 'has handler property.');
+            t.notEqual(route.produces, undefined, 'has produces property.');
+            t.notEqual(route.consumes, undefined, 'has consumes property.');
         });
 
         t.end();
