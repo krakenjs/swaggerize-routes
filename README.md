@@ -21,7 +21,8 @@ var builder = require('swaggerize-routes');
 
 var routes = builder({
     api: require('./api.json'),
-    handlers: './handlers'
+    handlers: './handlers',
+    security: './security' //Optional - security authorize handlers as per `securityDefinitions`
 }));
 ```
 
@@ -31,7 +32,7 @@ Options:
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 - `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
 - `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
-- `security` - A directory to scan for authorize handlers corresponding to `securityDefinitions`.
+- `security` - directory to scan for authorize handlers corresponding to `securityDefinitions`.
 
 **Returns:** An array of the processed routes.
 

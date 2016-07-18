@@ -1,6 +1,6 @@
 ### Unreleased
 
-- `options.security`to define the security authorize handlers directory.
+- `options.security` to define the security authorize handlers directory.
 
 ### 1.0.8
 
