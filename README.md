@@ -21,7 +21,8 @@ var builder = require('swaggerize-routes');
 
 var routes = builder({
     api: require('./api.json'),
-    handlers: './handlers'
+    handlers: './handlers',
+    security: './security' //Optional - security authorize handlers as per `securityDefinitions`
 }));
 ```
 
@@ -31,6 +32,7 @@ Options:
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
 - `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
 - `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
+- `security` - directory to scan for authorize handlers corresponding to `securityDefinitions`.
 
 **Returns:** An array of the processed routes.
 
@@ -140,7 +142,7 @@ In the case where a different `x-handler` file is specified for each operation.
 
 The directory generation will yield this object, but it can be provided directly as `options.handlers`.
 
-Note that if you are programatically constructing a handlers obj this way, you must namespace HTTP verbs with `$` to
+Note that if you are programmatically constructing a handlers obj this way, you must namespace HTTP verbs with `$` to
 avoid conflicts with path names. These keys should also be *lowercase*.
 
 Example:
@@ -168,7 +170,7 @@ The `routes` array returned from the call to the builder will contain `route` ob
 - `name` - same as `operationId` in `api` definition.
 - `description` - same as `description` in `path` for `api` definition.
 - `method` - same as `method` from `api` `operation` definition.
-- `security` - the security defintion for this route, either pulled from the operation level or path level.
+- `security` - the security definition for this route, either pulled from the operation level or path level.
 - `validators` - an array of validation objects created from each `parameter` on the `operation`.
 - `handler` - a handler function appropriate to the target framework (e.g express).
 - `consumes` - same as `consumes` in `api` definition.
@@ -182,6 +184,69 @@ The validator object in the `validators` array will have the following propertie
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
 - `schema` - the `joi` schema being validated against.
 
+### Security directory
+
+The `options.security` option specifies a directory to scan for security authorize handlers. These authorize handlers are bound to the api `securityDefinitions` defined in the swagger document.
+
+The name of the `securityDefinitions` should match the file name of the authorize handler.
+
+For example, for the security definition :
+
+```json
+"securityDefinitions": {
+    "default": {
+        "type": "oauth2",
+        "scopes": {
+            "read": "read pets.",
+            "write": "write pets."
+        }
+    },
+    "secondary": {
+        "type": "oauth2",
+        "scopes": {
+            "read": "read secondary pets.",
+            "write": "write secondary pets."
+        }
+    }
+}
+```
+
+The `options.security`, say `security` directory should have following files:
+
+```
+├── security
+   ├── default.js
+   ├── secondary.js
+
+```
+
+### Schema Extension for security authorize handler
+
+An alternative approach to `options.security` option, is use swagger schema extension (^x-) and define `x-authorize` as part of the `securityDefinitions`.
+
+```json
+"securityDefinitions": {
+    "default": {
+        "type": "oauth2",
+        "scopes": {
+            "read": "read pets.",
+            "write": "write pets."
+        },
+        "x-authorize": "security/default_authorize.js"
+    },
+    "secondary": {
+        "type": "oauth2",
+        "scopes": {
+            "read": "read secondary pets.",
+            "write": "write secondary pets."
+        },
+        "x-authorize": "security/secondary_authorize.js"
+    }
+}
+```
+
+`x-authorize` will override any resolved authorize handlers defined by `options.security`.
+
 ### Security Object
 
 The security object in the `route` is an object containing keys corresponding to names found under the [Swagger Security Definitions](https://github.com/swagger-api/swagger-spec/blob/master/versions/2.0.md#securityDefinitionsObject).
@@ -189,4 +254,4 @@ The security object in the `route` is an object containing keys corresponding to
 Under each key will be an object containing the following properties:
 
 - `scopes` - an array of scopes accepted for this route.
-- `authorize` - a function that may be provided by defining a `x-authorize` attribute to the security definition.
+- `authorize` - a function scanned from the authorize handlers defined by the `options.security` directory. Or this may be provided by defining a `x-authorize` attribute to the security definition.
