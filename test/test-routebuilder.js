@@ -1,44 +1,54 @@
-'use strict';
+const Test = require('tape');
+const Path = require('path');
+const Buildroutes = require('../lib/builders/routes');
+const Parser = require('swagger-parser');
 
-var test = require('tape'),
-    path = require('path'),
-    buildroutes = require('../lib/buildroutes');
+const testRoute = (routes, t) => {
+    routes.forEach(route => {
+        t.comment('***** ' + route.name + ' *****');
+        t.ok(route.method, 'Ok method property.');
+        t.ok(route.description, 'Ok description property.');
+        t.ok(route.name, 'Ok name property.');
+        t.ok(route.path, 'Ok path property.');
+        t.ok(route.security, 'Ok security property.');
+        t.ok(route.validators, 'Ok validators property.');
+        t.ok(route.handler, 'Ok handler property.');
+        t.ok(route.produces, 'Ok produces property.');
+    });
+};
 
-test('routebuilder', function (t) {
-    var routes, schemaValidator, api;
+const testRouteMustHave = (routes, t) => {
+    routes.forEach(route => {
+        t.ok(route.method, 'Ok method property.');
+        t.ok(route.path, 'Ok path property.');
+        t.ok(route.handler, 'Ok handler property.');
+    });
+};
 
-    api = require('./fixtures/defs/pets.json');
+Test('routebuilder', tester => {
+    let routes;
+    let routesResolver;
+    let apiResolver = Parser.validate(Path.join(__dirname, './fixtures/defs/pets.json'));
 
-    t.test('build directory', function (t) {
-        routes = buildroutes({
-            api: api,
-            basedir: path.join(__dirname, 'fixtures'),
-            handlers: path.join(__dirname, 'fixtures/handlers'),
-            security: path.join(__dirname, 'fixtures/extensions')
+
+    tester.test('build directory', t => {
+        routesResolver = Buildroutes(apiResolver, {
+            basedir: Path.join(__dirname, 'fixtures'),
+            handlers: Path.join(__dirname, 'fixtures/handlers'),
+            security: Path.join(__dirname, 'fixtures/extensions')
         });
-
-        t.strictEqual(routes.length, 4, 'added 4 routes.');
-
-        routes.forEach(function (route) {
-            t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has validate property.');
-            t.ok(route.hasOwnProperty('name'), 'has name property.');
-            t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('security'), 'has security property.');
-            t.ok(route.hasOwnProperty('validators'), 'has before property.');
-            if(route.method === 'get' && route.path === '/pets'){
-              t.ok(route.jsonp === 'callback', 'options property is the right one.');
-              t.ok(route.cache.statuses.join(',') === '200', 'options property is the right one.');
-              t.ok(route.config.plugins.policies.join(', ') === 'isLoggedIn, addTracking, logThis', 'options property is the right one.');
-            }
-            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has validate property.');
+        routesResolver.then(resolved => {
+            routes = resolved;
+            t.strictEqual(routes.length, 6, 'added 6 routes.');
+            testRoute(routes, t);
+            t.end();
+        }).catch(err => {
+            t.error(err);
+            t.end();
         });
-
-        t.end();
     });
 
-    t.test('security definitions', function (t) {
+    tester.test('security definitions', t => {
         var route;
 
         t.plan(5);
@@ -52,71 +62,60 @@ test('routebuilder', function (t) {
         t.ok(route.security.secondary && typeof route.security.secondary.authorize === 'function', 'secondary has an authorize function.');
     });
 
-    t.test('build from x-handler', function (t) {
-        routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures')});
-
-        t.strictEqual(routes.length, 2, 'added 2 routes.');
-
-        routes.forEach(function (route) {
-            t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has validate property.');
-            t.ok(route.hasOwnProperty('name'), 'has name property.');
-            t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('security'), 'has security property.');
-            t.ok(route.hasOwnProperty('validators'), 'has before property.');
-            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has validate property.');
+    tester.test('build from x-handler', t => {
+        routesResolver = Buildroutes(apiResolver, {
+            basedir: Path.join(__dirname, 'fixtures')
         });
 
-        t.end();
+        routesResolver.then(resolved => {
+            routes = resolved;
+            t.strictEqual(routes.length, 2, 'added 2 routes.');
+            testRoute(routes, t);
+            t.end();
+
+        }).catch(err => {
+            t.error(err);
+            t.end();
+        });
+
     });
 
-    t.test('build with object', function (t) {
-        routes = buildroutes({
-            api: api,
-            basedir: path.join(__dirname, 'fixtures'),
+    tester.test('build with object', t => {
+        routesResolver = Buildroutes(apiResolver, {
+            basedir: Path.join(__dirname, 'fixtures'),
             handlers: {
                 'pets': {
-                    $get: function () {},
-                    $post: function () {},
+                    get: function () {},
+                    post: function () {},
                     '{id}': {
-                        $get: function () {},
-                        $delete: function () {},
+                        get: function () {},
+                        delete: function () {},
                         'items': {
-                            $get: function () {},
-                            $post: function () {}
+                            get: function () {},
+                            post: function () {}
                         }
                     }
                 }
-            },
-            schemaValidator: schemaValidator
+            }
         });
 
-        t.strictEqual(routes.length, 6, 'added 6 routes.');
-
-        routes.forEach(function (route) {
-            t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has validate property.');
-            t.ok(route.hasOwnProperty('name'), 'has name property.');
-            t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('security'), 'has security property.');
-            t.ok(route.hasOwnProperty('validators'), 'has validators property.');
-            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has produces property.');
-            t.ok(route.hasOwnProperty('consumes'), 'has consumes property.');
-        });
-
-        t.end();
+        routesResolver.then(resolved => {
+            routes = resolved;
+            t.strictEqual(routes.length, 6, 'added 6 routes.');
+            testRoute(routes, t);
+            t.end();
+        }).catch(err => {
+            t.error(err);
+            t.end();
+        })
     });
 
-    t.test('route validators', function (t) {
+    tester.test('route validators', t => {
         var route;
 
         route = routes[1];
-
         t.strictEqual(route.validators.length, 1, 'has a validator.');
         t.ok(typeof route.validators[0].parameter === 'object', 'has parameter object property.');
-        t.ok(typeof route.validators[0].schema === 'object', 'has schema object property.');
         t.ok(typeof route.validators[0].validate === 'function', 'has validate fn property.');
 
         route.validators[0].validate({
@@ -135,54 +134,52 @@ test('routebuilder', function (t) {
         t.end();
     });
 
-    t.test('route validator merge', function(t) {
+    tester.test('route validator merge', t => {
         var route;
         route = routes[5];
 
         t.strictEqual(route.validators.length, 3, 'has 3 validators.');
 
         var validator;
-        validator = route.validators.filter(function (validator) {return validator.parameter.name === 'date'}).shift();
+        validator = route.validators.filter(validator => {return validator.parameter.name === 'date'}).shift();
         t.ok(validator.parameter.required, 'override by operation.');
 
         t.end();
     });
 
-    t.test('bad dir', function (t) {
-        t.plan(1);
+    tester.test('bad dir', t => {
 
-        t.throws(function () {
-            buildroutes({ api: api, handlers: 'asdf' });
-        }, 'throws error for bad directory.');
+        routesResolver = Buildroutes(apiResolver, {
+            handlers: 'asdf'
+        });
+        routesResolver.catch(err => {
+            t.ok(err);
+            t.ok(err.code === 'ENOENT', 'Ok error for bad directory')
+            t.end()
+        });
+
     });
 
-    t.test('build with root path', function (t) {
-        var routes = buildroutes({
-            api: require('./fixtures/defs/testroot.json'),
-            basedir: path.join(__dirname, 'fixtures'),
+    tester.test('build with root path', function (t) {
+        apiResolver = Parser.validate(Path.join(__dirname, './fixtures/defs/testroot.json'));
+        routesResolver = Buildroutes( apiResolver,{
+            basedir: Path.join(__dirname, 'fixtures'),
             handlers: {
-                $get: function () {},
+                get: function () {},
                 other: {
-                    $get: function () {}
+                    get: function () {}
                 }
             }
         });
 
-        t.strictEqual(routes.length, 2, 'added 1 routes.');
-
-        routes.forEach(function (route) {
-            t.ok(route.hasOwnProperty('method'), 'has method property.');
-            t.ok(route.hasOwnProperty('description'), 'has validate property.');
-            t.ok(route.hasOwnProperty('name'), 'has name property.');
-            t.ok(route.hasOwnProperty('path'), 'has path property.');
-            t.ok(route.hasOwnProperty('security'), 'has security property.');
-            t.ok(route.hasOwnProperty('validators'), 'has validators property.');
-            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
-            t.ok(route.hasOwnProperty('produces'), 'has produces property.');
-            t.ok(route.hasOwnProperty('consumes'), 'has consumes property.');
-        });
-
-        t.end();
+        routesResolver.then(resolved => {
+            routes = resolved;
+            t.strictEqual(routes.length, 2, 'added 2 routes.');
+            testRouteMustHave(routes, t);
+            t.end();
+        }).catch(err => {
+            t.error(err);
+            t.end();
+        })
     });
-
 });

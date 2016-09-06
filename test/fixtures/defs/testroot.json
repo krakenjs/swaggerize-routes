@@ -1,6 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
+        "title": "",
         "version": "1.0.0",
         "license": {
             "name": "MIT"
@@ -26,8 +27,8 @@
                 "responses": {
                     "200": {
                         "description": "root",
-                        "type": "array",
                         "schema": {
+                            "type": "array",
                             "$ref": "#/definitions/Thing"
                         }
                     }
@@ -43,8 +44,8 @@
                 "responses": {
                     "200": {
                         "description": "other",
-                        "type": "array",
                         "schema": {
+                            "type": "array",
                             "$ref": "#/definitions/Thing"
                         }
                     }
