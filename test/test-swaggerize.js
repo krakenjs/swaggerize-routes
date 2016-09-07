@@ -22,14 +22,18 @@ Test('configure', tester => {
     });
 
     tester.test('bad api definition', t => {
-        t.plan(1);
 
-        t.throws(function () {
-            Swaggerize({
-                api: require('./fixtures/defs/badapi.json'),
-                basedir: Path.join(__dirname, './fixtures')
-            });
-        }, 'throws exception.');
+        routeBuilder = Swaggerize({
+            api: require('./fixtures/defs/badapi.json'),
+            basedir: Path.join(__dirname, './fixtures')
+        });
+
+        routeBuilder.catch( err => {
+            t.ok(err);
+            t.ok(err.name === 'SyntaxError', 'Ok error name for bad api definition');
+            t.ok(/not a valid Swagger API definition$/.test(err.message), 'Ok error for bad api definition');
+            t.end();
+        });
     });
 
     tester.test('only the api', t => {
