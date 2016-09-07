@@ -1,198 +1,191 @@
-'use strict';
+const Test = require('tape');
+const Thing = require('core-util-is');
+const Parser = require('swagger-parser');
+const Swaggerize = require('../lib/index');
+const Path = require('path');
 
-var test = require('tape'),
-    thing = require('core-util-is'),
-    swaggerize = require('../lib/index'),
-    path = require('path');
-
-test('configure', function (t) {
-
-    t.test('fail no options', function (t) {
+Test('configure', tester => {
+    let routeBuilder;
+    tester.test('fail no options', t => {
         t.plan(1);
-
         t.throws(function () {
-            swaggerize();
+            Swaggerize();
         }, 'throws exception.');
     });
 
-    t.test('fail no api definition', function (t) {
+    tester.test('fail no api definition', t => {
         t.plan(1);
 
         t.throws(function () {
-            swaggerize({});
+            Swaggerize({});
         }, 'throws exception.');
     });
 
-    t.test('bad api definition', function (t) {
+    tester.test('bad api definition', t => {
         t.plan(1);
 
         t.throws(function () {
-            swaggerize({
+            Swaggerize({
                 api: require('./fixtures/defs/badapi.json'),
                 basedir: path.join(__dirname, './fixtures')
             });
         }, 'throws exception.');
     });
 
-    t.test('api', function (t) {
-        t.plan(2);
+    tester.test('only the api', t => {
 
-        var routes = swaggerize({
+        routeBuilder = Swaggerize({
+            api: require('./fixtures/defs/pets.json')
+        });
+
+        routeBuilder.then( routes => {
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 0, 'routes.length 0.');
+            t.end();
+        }).catch( err => {
+            t.error(err);
+            t.end();
+        });
+    });
+
+    tester.test('api as an object', t => {
+
+        routeBuilder = Swaggerize({
             api: require('./fixtures/defs/pets.json'),
-            basedir: path.join(__dirname, './fixtures')
+            basedir: Path.join(__dirname, './fixtures')
         });
 
-        t.ok(thing.isArray(routes), 'returns array.');
-        t.strictEqual(routes.length, 4, 'routes.length 4.');
-    });
-
-});
-
-test('additional schemas', function (t) {
-
-    t.test('fails with bad types', function (t) {
-        t.plan(1);
-
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    'a', 'b', 'c'
-                ]
-            });
+        routeBuilder.then( routes => {
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 2, 'routes.length 2.');
+            t.end();
+        }).catch( err => {
+            t.error(err);
+            t.end();
         });
     });
 
-    t.test('fails with missing name', function (t) {
-        t.plan(1);
+    tester.test('api path', t => {
 
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {}
-                ]
-            });
+        routeBuilder = Swaggerize({
+            api: Path.join(__dirname, './fixtures/defs/pets.json'),
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: Path.join(__dirname, './fixtures/handlers')
+        });
+
+        routeBuilder.then( routes => {
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 6, 'routes.length 6.');
+            t.end();
+        }).catch( err => {
+            t.error(err);
+            t.end();
         });
     });
 
-    t.test('fails with missing schema', function (t) {
-        t.plan(1);
+    tester.test('fail wrong api path', t => {
 
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {name: 'models'}
-                ]
-            });
+        routeBuilder = Swaggerize({
+            api: 'wrongpath'
+        });
+
+        routeBuilder.catch( err => {
+            t.ok(err);
+            t.ok(err.code === 'ENOENT', 'Ok error for wrong path')
+            t.end();
         });
     });
 
-    t.test('fails with bad types', function (t) {
-        t.plan(1);
+    tester.test('validated api', t => {
 
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {name: 'models', schema: 1}
-                ]
-            });
+        let apiResolver = Parser.validate(Path.join(__dirname, './fixtures/defs/pets.json'));
+        routeBuilder = Swaggerize({
+            validated: true,
+            api: apiResolver,
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: Path.join(__dirname, './fixtures/handlers')
         });
-    });
 
-    t.test('fails with bad name', function (t) {
-        t.plan(1);
-
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {name: '#', schema: {}}
-                ]
-            });
+        routeBuilder.then( routes => {
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 6, 'routes.length 6.');
+            t.end();
+        }).catch( err => {
+            t.error(err);
+            t.end();
         });
     });
 
 });
 
+Test('handlers', t => {
 
-test('handlers', function (t) {
-
-    t.test('absolute path', function(t) {
+    t.test('absolute path', t => {
         t.plan(1);
 
         t.doesNotThrow(function () {
-            swaggerize({
+            Swaggerize({
                 api: require('./fixtures/defs/pets.json'),
-                handlers: path.join(__dirname, './fixtures/handlers')
+                handlers: Path.join(__dirname, './fixtures/handlers')
             });
         });
     });
 
-    t.test('relative path', function(t) {
+    t.test('relative path', t => {
         t.plan(1);
 
         t.doesNotThrow(function () {
-            swaggerize({
+            Swaggerize({
                 api: require('./fixtures/defs/pets.json'),
                 handlers: './fixtures/handlers'
             });
         });
     });
 
-    t.test('empty path', function(t) {
+    t.test('empty path', t => {
         t.plan(1);
 
-        t.throws(function () {
-            swaggerize({
+        t.doesNotThrow(function () {
+            Swaggerize({
                 api: require('./fixtures/defs/pets.json'),
                 handlers: ''
             });
         });
     });
 
-    t.test('relative path with basedir', function(t) {
+    t.test('relative path with basedir', t => {
         t.plan(1);
 
         t.doesNotThrow(function () {
-            swaggerize({
+            Swaggerize({
                 api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
+                basedir: Path.join(__dirname, './fixtures'),
                 handlers: './handlers'
             });
         });
     });
 
-    t.test('basedir with no handlers property', function(t) {
+    t.test('basedir with no handlers property', t => {
         t.plan(1);
 
         t.doesNotThrow(function () {
-            swaggerize({
+            Swaggerize({
                 api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures')
+                basedir: Path.join(__dirname, './fixtures')
             });
         });
     });
 
-    t.test('handlers as object', function(t) {
+    t.test('handlers as object', t => {
         t.plan(1);
 
         t.doesNotThrow(function () {
-            swaggerize({
+            Swaggerize({
                 api: require('./fixtures/defs/pets.json'),
                 handlers: {
-                    $get: function () {}
+                    get: function () {}
                 }
             });
         });
     });
-
-
 });
