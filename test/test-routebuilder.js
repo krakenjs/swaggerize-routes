@@ -107,7 +107,7 @@ Test('routebuilder', tester => {
         }).catch(err => {
             t.error(err);
             t.end();
-        })
+        });
     });
 
     tester.test('route validators', t => {
@@ -120,14 +120,14 @@ Test('routebuilder', tester => {
 
         route.validators[0].validate({
             id: 0
-        }, function (error, newvalue) {
+        }, function (error) {
             t.ok(error, 'validation failed.');
         });
 
         route.validators[0].validate({
             id: 0,
             name: 'Cat'
-        }, function (error, newvalue) {
+        }, function (error) {
             t.ok(!error, 'validation passed.');
         });
 
@@ -141,7 +141,7 @@ Test('routebuilder', tester => {
         t.strictEqual(route.validators.length, 3, 'has 3 validators.');
 
         var validator;
-        validator = route.validators.filter(validator => {return validator.parameter.name === 'date'}).shift();
+        validator = route.validators.filter(validator => {return validator.parameter.name === 'date';}).shift();
         t.ok(validator.parameter.required, 'override by operation.');
 
         t.end();
@@ -154,8 +154,8 @@ Test('routebuilder', tester => {
         });
         routesResolver.catch(err => {
             t.ok(err);
-            t.ok(err.code === 'ENOENT', 'Ok error for bad directory')
-            t.end()
+            t.ok(err.code === 'ENOENT', 'Ok error for bad directory');
+            t.end();
         });
 
     });
@@ -180,6 +180,6 @@ Test('routebuilder', tester => {
         }).catch(err => {
             t.error(err);
             t.end();
-        })
+        });
     });
 });

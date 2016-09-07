@@ -27,7 +27,7 @@ Test('configure', tester => {
         t.throws(function () {
             Swaggerize({
                 api: require('./fixtures/defs/badapi.json'),
-                basedir: path.join(__dirname, './fixtures')
+                basedir: Path.join(__dirname, './fixtures')
             });
         }, 'throws exception.');
     });
@@ -91,7 +91,7 @@ Test('configure', tester => {
 
         routeBuilder.catch( err => {
             t.ok(err);
-            t.ok(err.code === 'ENOENT', 'Ok error for wrong path')
+            t.ok(err.code === 'ENOENT', 'Ok error for wrong path');
             t.end();
         });
     });
