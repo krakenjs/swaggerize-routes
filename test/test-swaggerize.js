@@ -120,6 +120,20 @@ Test('configure', tester => {
         });
     });
 
+    tester.test('callback response', t => {
+
+        Swaggerize({
+            api: Path.join(__dirname, './fixtures/defs/pets.json'),
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: Path.join(__dirname, './fixtures/handlers')
+        }, (err, routes) => {
+            t.error(err);
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 6, 'routes.length 6.');
+            t.end();
+        });
+    });
+
 });
 
 Test('handlers', t => {
