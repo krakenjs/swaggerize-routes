@@ -23,7 +23,7 @@
     "core-util-is": "^1.0.1",
     "debuglog": "^1.0.1",
     "merge-object-files": "^1.0.3",
-    "openapi-param-validator": "subeeshcbabu/openapi-param-validator",
+    "swagvali": "subeeshcbabu/swagvali",
     "swagger-parser": "^3.4.1"
   },
   "devDependencies": {
