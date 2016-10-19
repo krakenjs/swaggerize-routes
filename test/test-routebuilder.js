@@ -109,6 +109,31 @@ test('routebuilder', function (t) {
         t.end();
     });
 
+    t.test('build with defaulthandler', function (t) {
+        routes = buildroutes({
+            api: api,
+            basedir: path.join(__dirname, 'fixtures'),
+            defaulthandler: function () {},
+            schemaValidator: schemaValidator
+        });
+
+        t.strictEqual(routes.length, 6, 'added 6 routes.');
+
+        routes.forEach(function (route) {
+            t.ok(route.hasOwnProperty('method'), 'has method property.');
+            t.ok(route.hasOwnProperty('description'), 'has validate property.');
+            t.ok(route.hasOwnProperty('name'), 'has name property.');
+            t.ok(route.hasOwnProperty('path'), 'has path property.');
+            t.ok(route.hasOwnProperty('security'), 'has security property.');
+            t.ok(route.hasOwnProperty('validators'), 'has validators property.');
+            t.ok(route.hasOwnProperty('handler'), 'has handler property.');
+            t.ok(route.hasOwnProperty('produces'), 'has produces property.');
+            t.ok(route.hasOwnProperty('consumes'), 'has consumes property.');
+        });
+
+        t.end();
+    });
+
     t.test('route validators', function (t) {
         var route;
 
