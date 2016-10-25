@@ -115,7 +115,7 @@ Test('routebuilder', tester => {
 
         route = routes[1];
         t.strictEqual(route.validators.length, 1, 'has a validator.');
-        t.ok(typeof route.validators[0].parameter === 'object', 'has parameter object property.');
+        t.ok(typeof route.validators[0].spec === 'object', 'has spec object property.');
         t.ok(typeof route.validators[0].validate === 'function', 'has validate fn property.');
 
         route.validators[0].validate({
@@ -141,8 +141,8 @@ Test('routebuilder', tester => {
         t.strictEqual(route.validators.length, 3, 'has 3 validators.');
 
         var validator;
-        validator = route.validators.filter(validator => {return validator.parameter.name === 'date';}).shift();
-        t.ok(validator.parameter.required, 'override by operation.');
+        validator = route.validators.filter(validator => {return validator.spec.name === 'date';}).shift();
+        t.ok(validator.spec.required, 'override by operation.');
 
         t.end();
     });
