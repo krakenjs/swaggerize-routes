@@ -180,9 +180,8 @@ The `routes` array returned from the call to the builder will contain `route` ob
 
 The validator object in the `validators` array will have the following properties:
 
-- `parameter` - same as the `parameter` from the operation on `path`.
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
-- `schema` - the `joi` schema being validated against.
+- `spec` - The schema of the parameter.
 
 ### Security directory
 
