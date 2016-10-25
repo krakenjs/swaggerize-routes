@@ -30,6 +30,7 @@ Options:
 
 - `api` - a valid Swagger 2.0 object.
 - `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
+- `defaulthandler` - a handler function appropriate to the target framework, if used this will be the default handler for all generated routes (see *Default handler* below).
 - `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
 - `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
 - `security` - directory to scan for authorize handlers corresponding to `securityDefinitions`.
@@ -110,7 +111,7 @@ Or at the operation level:
 
 These paths are relative to the `options.basedir` and are used as fallbacks for missing handlers from directory scan.
 
-If the `options.handlers` is empty, then they will be used exclusively.
+If the `options.handlers` and `options.defaulthandler` is empty, then they will be used exclusively.
 
 ### Handlers File
 
@@ -161,6 +162,20 @@ Example:
 ```
 
 Handler keys in files do *not* have to be namespaced in this way.
+
+### Default handler
+
+The `options.defaulthandler` will set the handler function for all generated routes to one default handler.
+
+``` javascript
+var routes = builder({
+    api: require('./api.json'),
+    defaulthandler: function (req, reply) {
+       reply('something');
+    }
+});
+```
+
 
 ### Route Object
 
