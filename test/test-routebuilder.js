@@ -10,7 +10,12 @@ test('routebuilder', function (t) {
     api = require('./fixtures/defs/pets.json');
 
     t.test('build directory', function (t) {
-        routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures'), handlers: path.join(__dirname, 'fixtures/handlers')});
+        routes = buildroutes({
+            api: api,
+            basedir: path.join(__dirname, 'fixtures'),
+            handlers: path.join(__dirname, 'fixtures/handlers'),
+            security: path.join(__dirname, 'fixtures/extensions')
+        });
 
         t.strictEqual(routes.length, 4, 'added 4 routes.');
 
@@ -31,6 +36,20 @@ test('routebuilder', function (t) {
         });
 
         t.end();
+    });
+
+    t.test('security definitions', function (t) {
+        var route;
+
+        t.plan(5);
+
+        route = routes[1];
+        t.ok(route.security, 'has security definition');
+        t.ok(route.security.default && Array.isArray(route.security.default.scopes), 'default has scopes.');
+        t.ok(route.security.default && typeof route.security.default.authorize === 'function', 'default has an authorize function.');
+        //options.security
+        t.ok(route.security.secondary && Array.isArray(route.security.secondary.scopes), 'secondary has scopes.');
+        t.ok(route.security.secondary && typeof route.security.secondary.authorize === 'function', 'secondary has an authorize function.');
     });
 
     t.test('build from x-handler', function (t) {
@@ -127,18 +146,6 @@ test('routebuilder', function (t) {
         t.ok(validator.parameter.required, 'override by operation.');
 
         t.end();
-    });
-
-    t.test('security definitions', function (t) {
-        var route;
-
-        t.plan(3);
-
-        route = routes[1];
-
-        t.ok(route.security, 'has security definition');
-        t.ok(route.security.default && Array.isArray(route.security.default.scopes), 'has scopes.');
-        t.ok(route.security.default && typeof route.security.default.authorize === 'function', 'has an authorize function.');
     });
 
     t.test('bad dir', function (t) {

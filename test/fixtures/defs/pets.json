@@ -38,6 +38,14 @@
                 "produces": [
                     "application/json"
                 ],
+                "security": [
+                    {
+                        "default": ["read"]
+                    },
+                    {
+                        "secondary": ["read"]
+                    }
+                ],
                 "jsonp": "callback",
                 "cache":{
                   "statuses":[200]
@@ -95,6 +103,9 @@
                 "security": [
                     {
                         "default": ["write"]
+                    },
+                    {
+                        "secondary": ["read"]
                     }
                 ],
                 "parameters": [
@@ -298,11 +309,10 @@
         },
         "secondary": {
             "type": "oauth2",
-            "scopes": [
-                "read",
-                "write"
-            ],
-            "x-authorize": "extensions/authorize_secondary.js"
+            "scopes": {
+                "read": "read secondary pets.",
+                "write": "write secondary pets."
+            }
         }
     },
     "definitions": {
