@@ -38,14 +38,6 @@
                 "produces": [
                     "application/json"
                 ],
-                "security": [
-                    {
-                        "default": ["read"]
-                    },
-                    {
-                        "secondary": ["read"]
-                    }
-                ],
                 "jsonp": "callback",
                 "cache":{
                   "statuses":[200]
