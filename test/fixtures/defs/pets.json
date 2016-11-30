@@ -23,6 +23,11 @@
     "produces": [
         "application/json"
     ],
+    "security": [
+        {
+            "default": ["read"]
+        }
+    ],
     "paths": {
         "/pets": {
             "x-handler": "extensions/pets.js",
@@ -32,14 +37,6 @@
                 "x-handler": "extensions/pets.js",
                 "produces": [
                     "application/json"
-                ],
-                "security": [
-                    {
-                        "default": ["read"]
-                    },
-                    {
-                        "secondary": ["read"]
-                    }
                 ],
                 "jsonp": "callback",
                 "cache":{
