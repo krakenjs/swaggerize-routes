@@ -1,3 +1,8 @@
+### 1.0.10
+
+- Fallback security to root api if missing in verb or path specification #62
+- `defaulthandler` option to override the handler file of a route to use a common handler for all the routes. #71
+ 
 ### 1.0.9
 
 - `options.security` to define the security authorize handlers directory.
