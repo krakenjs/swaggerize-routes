@@ -271,6 +271,32 @@ test('validation', function (t) {
         });
     });
 
+    t.test('input fail (minimum)', function (t) {
+        t.plan(1);
+
+        validator.make({
+            name: 'id',
+            required: true,
+            type: 'integer',
+            minimum: 1
+        }).validate(0, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('input fail (maximum)', function (t) {
+        t.plan(1);
+
+        validator.make({
+            name: 'id',
+            required: true,
+            type: 'integer',
+            maximum: 1
+        }).validate(2, function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
     t.test('input ignore extra value', function(t) {
         t.plan(2);
 
