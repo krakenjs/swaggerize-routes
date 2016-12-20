@@ -142,6 +142,21 @@ test('validation', function (t) {
         });
     });
 
+    ['0', '1'].forEach(function(value) {
+        t.test('input coerce to number (pass) - value ' + value, function (t) {
+            t.plan(2);
+
+            validator.make({
+                name: 'id',
+                required: true,
+                type: 'number'
+            }).validate(value, function (error, result) {
+                t.ok(!error, 'no error.');
+                t.ok(thing.isNumber(result), 'coerced to number.');
+            });
+        });
+    });
+
     t.test('input coerce to byte (pass)', function (t) {
         t.plan(1);
 
