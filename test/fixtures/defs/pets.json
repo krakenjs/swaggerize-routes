@@ -23,6 +23,11 @@
     "produces": [
         "application/json"
     ],
+    "security": [
+        {
+            "default": ["read"]
+        }
+    ],
     "paths": {
         "/pets": {
             "x-handler": "extensions/pets.js",
@@ -32,11 +37,6 @@
                 "x-handler": "extensions/pets.js",
                 "produces": [
                     "application/json"
-                ],
-                "security": [
-                    {
-                        "default": ["read"]
-                    }
                 ],
                 "jsonp": "callback",
                 "cache":{
@@ -95,6 +95,9 @@
                 "security": [
                     {
                         "default": ["write"]
+                    },
+                    {
+                        "secondary": ["read"]
                     }
                 ],
                 "parameters": [
@@ -298,11 +301,10 @@
         },
         "secondary": {
             "type": "oauth2",
-            "scopes": [
-                "read",
-                "write"
-            ],
-            "x-authorize": "extensions/authorize_secondary.js"
+            "scopes": {
+                "read": "read secondary pets.",
+                "write": "write secondary pets."
+            }
         }
     },
     "definitions": {
