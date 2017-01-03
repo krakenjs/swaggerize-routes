@@ -38,7 +38,7 @@ Test('routebuilder', tester => {
             security: Path.join(__dirname, 'fixtures/extensions')
         });
         routesResolver.then(resolved => {
-            routes = resolved;
+            ({ routes } = resolved);
             t.strictEqual(routes.length, 6, 'added 6 routes.');
             testRoute(routes, t);
             t.end();
@@ -68,7 +68,7 @@ Test('routebuilder', tester => {
         });
 
         routesResolver.then(resolved => {
-            routes = resolved;
+            ({ routes } = resolved);
             t.strictEqual(routes.length, 2, 'added 2 routes.');
             testRoute(routes, t);
             t.end();
@@ -100,7 +100,7 @@ Test('routebuilder', tester => {
         });
 
         routesResolver.then(resolved => {
-            routes = resolved;
+            ({ routes } = resolved);
             t.strictEqual(routes.length, 6, 'added 6 routes.');
             testRoute(routes, t);
             t.end();
@@ -173,7 +173,7 @@ Test('routebuilder', tester => {
         });
 
         routesResolver.then(resolved => {
-            routes = resolved;
+            ({ routes } = resolved);
             t.strictEqual(routes.length, 2, 'added 2 routes.');
             testRouteMustHave(routes, t);
             t.end();
