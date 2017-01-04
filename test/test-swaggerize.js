@@ -36,16 +36,20 @@ Test('configure', tester => {
         });
     });
 
-    tester.test('fail for missing handler path', t => {
+    tester.test('should not fail for missing handler path', t => {
 
         routeBuilder = Swaggerize({
             api: require('./fixtures/defs/pets.json')
         });
 
-        routeBuilder.catch( err => {
-            t.ok(err);
-            t.ok(err.code === 'ENOENT', 'Ok error code ENOENT for missing handler directory');
-            t.ok(/^ENOENT: no such file or directory/.test(err.message), 'Ok error for missing handler directory');
+        routeBuilder.then(routeObj => {
+            let { api, routes } = routeObj;
+            t.ok(Thing.isObject(api), 'Resolved api object should be returned');
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 0, 'routes.length 0.');
+            t.end();
+        }).catch(error => {
+            t.error(error);
             t.end();
         });
     });
