@@ -2,6 +2,7 @@ const Test = require('tape');
 const Path = require('path');
 const Buildroutes = require('../lib/builders/routes');
 const Parser = require('swagger-parser');
+const Thing = require('core-util-is');
 
 const testRoute = (routes, t) => {
     routes.forEach(route => {
@@ -11,8 +12,8 @@ const testRoute = (routes, t) => {
         t.ok(route.name, 'Ok name property.');
         t.ok(route.path, 'Ok path property.');
         t.ok(route.security, 'Ok security property.');
-        t.ok(route.validators, 'Ok validators property.');
-        t.ok(route.handler, 'Ok handler property.');
+        t.ok(route.validators && Thing.isObject(route.validators), 'Ok validators property.');
+        t.ok(route.handler && Thing.isFunction(route.handler), 'Ok handler property.');
         t.ok(route.produces, 'Ok produces property.');
     });
 };
@@ -85,14 +86,14 @@ Test('routebuilder', tester => {
             basedir: Path.join(__dirname, 'fixtures'),
             handlers: {
                 'pets': {
-                    get: function () {},
-                    post: function () {},
+                    $get: function () {},
+                    $post: function () {},
                     '{id}': {
-                        get: function () {},
-                        delete: function () {},
+                        $get: function () {},
+                        $delete: function () {},
                         'items': {
-                            get: function () {},
-                            post: function () {}
+                            $get: function () {},
+                            $post: function () {}
                         }
                     }
                 }
@@ -165,9 +166,9 @@ Test('routebuilder', tester => {
         routesResolver = Buildroutes( apiResolver,{
             basedir: Path.join(__dirname, 'fixtures'),
             handlers: {
-                get: function () {},
+                $get: function () {},
                 other: {
-                    get: function () {}
+                    $get: function () {}
                 }
             }
         });
