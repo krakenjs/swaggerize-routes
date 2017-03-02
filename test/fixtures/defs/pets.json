@@ -275,7 +275,8 @@
                     "description": "Operation date",
                     "required": false,
                     "type": "string",
-                    "format": "dateTime"
+                    "format": "dateTime",
+		    "minLength": 5
                 }
             ]
         }

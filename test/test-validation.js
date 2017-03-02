@@ -32,6 +32,25 @@ test('validation', function (t) {
         });
     });
 
+    t.test('input pass with minLength', function (t) {
+        t.plan(2);
+
+        var functionnalValidator = validator.make({
+            name: 'id',
+            required: true,
+            type: 'string',
+	    minLength: 2
+	});
+
+        functionnalValidator.validate('1', function (error) {
+            t.ok(error, 'error.');
+        });
+
+        functionnalValidator.validate('12', function (error) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
     t.test('input pass with pattern', function (t) {
         t.plan(2);
 
@@ -283,7 +302,7 @@ test('validation', function (t) {
 
         v.validate({ id: 1, name: 'fluffy', extra: 'foo'}, function(error, result) {
             t.ok(!error, 'no error.');
-            t.ok(!result.extra, 'No extra properties')
+            t.ok(!result.extra, 'No extra properties');
         });
     });
 
