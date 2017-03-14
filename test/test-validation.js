@@ -35,18 +35,56 @@ test('validation', function (t) {
     t.test('input pass with pattern', function (t) {
         t.plan(2);
 
-        var functionnalValidator = validator.make({
+        var validate = validator.make({
             name: 'id',
             required: true,
             type: 'string',
             pattern: '[0-9]+'
         });
 
-        functionnalValidator.validate('1', function (error) {
+        validate.validate('1', function (error) {
             t.ok(!error, 'no error.');
         });
 
-        functionnalValidator.validate('abc', function (error) {
+        validate.validate('abc', function (error) {
+            t.ok(error, 'error.');
+        });
+    });
+
+    t.test('input pass with minLength', function (t) {
+        t.plan(2);
+
+        var validate = validator.make({
+            name: 'id',
+            required: true,
+            type: 'string',
+    	    minLength: 2
+    	});
+
+        validate.validate('1', function (error) {
+            t.ok(error, 'error.');
+        });
+
+        validate.validate('12', function (error) {
+            t.ok(!error, 'no error.');
+        });
+    });
+
+    t.test('input pass with maxLength', function (t) {
+        t.plan(2);
+
+        var validate = validator.make({
+            name: 'id',
+            required: true,
+            type: 'string',
+    	    maxLength: 4
+    	});
+
+        validate.validate('1', function (error) {
+            t.ok(!error, 'no error.');
+        });
+
+        validate.validate('12345', function (error) {
             t.ok(error, 'error.');
         });
     });
