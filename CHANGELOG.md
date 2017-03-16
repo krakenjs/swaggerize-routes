@@ -1,5 +1,6 @@
+### 1.0.11
 
-- Fix #76
+- Fix #76 - parameter minLength is overridden with value 0
 
 ### 1.0.10
 
