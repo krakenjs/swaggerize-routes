@@ -60,12 +60,10 @@
                         "collectionFormat": "csv"
                     },
                     {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "maximum number of results to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
+                        "$ref": "#/parameters/limit"
+                    },
+                    {
+                        "$ref": "#/parameters/offset"
                     }
                 ],
                 "responses": {
@@ -288,6 +286,22 @@
             "required": true,
             "type": "integer",
             "format": "int64"
+        },
+        "limit": {
+            "name": "limit",
+            "in": "query",
+            "description": "maximum number of results to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+        },
+        "offset": {
+            "name": "offset",
+            "in": "query",
+            "description": "number of results to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
         }
     },
     "securityDefinitions": {

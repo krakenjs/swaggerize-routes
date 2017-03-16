@@ -173,6 +173,14 @@ test('routebuilder', function (t) {
         t.end();
     });
 
+    t.test('route validator merge with multiple $ref', function(t) {
+        var route = routes[0]
+
+        t.strictEqual(route.validators.length, 3, 'has 3 validators');
+
+        t.end();
+    })
+
     t.test('bad dir', function (t) {
         t.plan(1);
 
