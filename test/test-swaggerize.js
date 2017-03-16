@@ -1,198 +1,248 @@
-'use strict';
+const Test = require('tape');
+const Thing = require('core-util-is');
+const Parser = require('swagger-parser');
+const Swaggerize = require('../lib/index');
+const Path = require('path');
 
-var test = require('tape'),
-    thing = require('core-util-is'),
-    swaggerize = require('../lib/index'),
-    path = require('path');
-
-test('configure', function (t) {
-
-    t.test('fail no options', function (t) {
+Test('configure', tester => {
+    let routeBuilder;
+    tester.test('fail no options', t => {
         t.plan(1);
-
         t.throws(function () {
-            swaggerize();
+            Swaggerize();
         }, 'throws exception.');
     });
 
-    t.test('fail no api definition', function (t) {
+    tester.test('fail no api definition', t => {
         t.plan(1);
 
         t.throws(function () {
-            swaggerize({});
+            Swaggerize({});
         }, 'throws exception.');
     });
 
-    t.test('bad api definition', function (t) {
-        t.plan(1);
+    tester.test('bad api definition', t => {
 
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/badapi.json'),
-                basedir: path.join(__dirname, './fixtures')
-            });
-        }, 'throws exception.');
+        routeBuilder = Swaggerize({
+            api: require('./fixtures/defs/badapi.json'),
+            basedir: Path.join(__dirname, './fixtures')
+        });
+
+        routeBuilder.catch( err => {
+            t.ok(err);
+            t.ok(err.name === 'SyntaxError', 'Ok error name for bad api definition');
+            t.ok(/not a valid Swagger API definition$/.test(err.message), 'Ok error for bad api definition');
+            t.end();
+        });
     });
 
-    t.test('api', function (t) {
-        t.plan(2);
+    tester.test('should not fail for missing handler path', t => {
 
-        var routes = swaggerize({
+        routeBuilder = Swaggerize({
+            api: require('./fixtures/defs/pets.json')
+        });
+
+        routeBuilder.then(routeObj => {
+            let { api, routes } = routeObj;
+            t.ok(Thing.isObject(api), 'Resolved api object should be returned');
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 0, 'routes.length 0.');
+            t.end();
+        }).catch(error => {
+            t.error(error);
+            t.end();
+        });
+    });
+
+    tester.test('api as an object', t => {
+
+        routeBuilder = Swaggerize({
             api: require('./fixtures/defs/pets.json'),
-            basedir: path.join(__dirname, './fixtures')
+            basedir: Path.join(__dirname, './fixtures')
         });
 
-        t.ok(thing.isArray(routes), 'returns array.');
-        t.strictEqual(routes.length, 4, 'routes.length 4.');
+        routeBuilder.then( routeObj => {
+            let { routes } = routeObj;
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 6, 'routes.length 6.');
+            t.end();
+        }).catch( err => {
+            t.error(err);
+            t.end();
+        });
+    });
+
+    tester.test('api path', t => {
+
+        routeBuilder = Swaggerize({
+            api: Path.join(__dirname, './fixtures/defs/pets.json'),
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: Path.join(__dirname, './fixtures/handlers')
+        });
+
+        routeBuilder.then( routeObj => {
+            let { routes } = routeObj;
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 6, 'routes.length 6.');
+            t.end();
+        }).catch( err => {
+            t.error(err);
+            t.end();
+        });
+    });
+
+    tester.test('fail wrong api path', t => {
+
+        routeBuilder = Swaggerize({
+            api: 'wrongpath'
+        });
+
+        routeBuilder.catch( err => {
+            t.ok(err);
+            t.ok(err.code === 'ENOENT', 'Ok error for wrong path');
+            t.end();
+        });
+    });
+
+    tester.test('validated api', t => {
+
+        let apiResolver = Parser.validate(Path.join(__dirname, './fixtures/defs/pets.json'));
+        routeBuilder = Swaggerize({
+            validated: true,
+            api: apiResolver,
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: Path.join(__dirname, './fixtures/handlers')
+        });
+
+        routeBuilder.then( routeObj => {
+            let { routes } = routeObj;
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 6, 'routes.length 6.');
+            t.end();
+        }).catch( err => {
+            t.error(err);
+            t.end();
+        });
+    });
+
+    tester.test('callback response', t => {
+
+        Swaggerize({
+            api: Path.join(__dirname, './fixtures/defs/pets.json'),
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: Path.join(__dirname, './fixtures/handlers')
+        }, (err, routeObj) => {
+            let { routes } = routeObj;
+            t.error(err);
+            t.ok(Thing.isArray(routes), 'returns array.');
+            t.strictEqual(routes.length, 6, 'routes.length 6.');
+            t.end();
+        });
     });
 
 });
 
-test('additional schemas', function (t) {
+Test('handlers', t => {
 
-    t.test('fails with bad types', function (t) {
-        t.plan(1);
+    t.test('absolute path', t => {
 
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    'a', 'b', 'c'
-                ]
-            });
+        Swaggerize({
+            api: require('./fixtures/defs/pets.json'),
+            handlers: Path.join(__dirname, './fixtures/handlers')
+        }).then(routeObj => {
+            let { api, routes } = routeObj;
+            t.ok(api, 'Resolved api from absolute handler path');
+            t.ok(Thing.isArray(routes), 'constructed routes from absolute handler path');
+            t.end();
+        }).catch(error => {
+            t.error(error);
+            t.end();
+        });
+
+    });
+
+    t.test('relative path', t => {
+        Swaggerize({
+            api: require('./fixtures/defs/pets.json'),
+            handlers: './fixtures/handlers'
+        }).then(routeObj => {
+            let { api, routes } = routeObj;
+            t.ok(api, 'Resolved api from relative handler path');
+            t.ok(Thing.isArray(routes), 'constructed routes from relative handler path');
+            t.end();
+        }).catch(error => {
+            t.error(error);
+            t.end();
+        });
+
+    });
+
+    t.test('empty path', t => {
+        Swaggerize({
+            api: require('./fixtures/defs/pets.json'),
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: ''
+        }).then(routeObj => {
+            let { routes } = routeObj;
+            t.ok(Thing.isArray(routes), 'constructed routes from empty handler path');
+            t.end();
+        }).catch(error => {
+            t.error(error);
+            t.end();
         });
     });
 
-    t.test('fails with missing name', function (t) {
-        t.plan(1);
-
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {}
-                ]
-            });
+    t.test('relative path with basedir', t => {
+        Swaggerize({
+            api: require('./fixtures/defs/pets.json'),
+            basedir: Path.join(__dirname, './fixtures'),
+            handlers: './handlers'
+        }).then(routeObj => {
+            let { routes } = routeObj;
+            t.ok(Thing.isArray(routes), 'constructed routes from relative handler path with basedir');
+            t.end();
+        }).catch(error => {
+            t.error(error);
+            t.end();
         });
     });
 
-    t.test('fails with missing schema', function (t) {
-        t.plan(1);
-
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {name: 'models'}
-                ]
-            });
+    t.test('basedir with no handlers property', t => {
+        Swaggerize({
+            api: require('./fixtures/defs/pets.json'),
+            basedir: Path.join(__dirname, './fixtures')
+        }).then(routeObj => {
+            let { routes } = routeObj;
+            t.ok(Thing.isArray(routes), 'constructed routes from basedir with no handlers property');
+            t.end();
+        }).catch(error => {
+            t.error(error);
+            t.end();
         });
+
     });
 
-    t.test('fails with bad types', function (t) {
-        t.plan(1);
-
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {name: 'models', schema: 1}
-                ]
-            });
-        });
-    });
-
-    t.test('fails with bad name', function (t) {
-        t.plan(1);
-
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                schemas: [
-                    {name: '#', schema: {}}
-                ]
-            });
-        });
-    });
-
-});
-
-
-test('handlers', function (t) {
-
-    t.test('absolute path', function(t) {
-        t.plan(1);
-
-        t.doesNotThrow(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                handlers: path.join(__dirname, './fixtures/handlers')
-            });
-        });
-    });
-
-    t.test('relative path', function(t) {
-        t.plan(1);
-
-        t.doesNotThrow(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                handlers: './fixtures/handlers'
-            });
-        });
-    });
-
-    t.test('empty path', function(t) {
-        t.plan(1);
-
-        t.throws(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                handlers: ''
-            });
-        });
-    });
-
-    t.test('relative path with basedir', function(t) {
-        t.plan(1);
-
-        t.doesNotThrow(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures'),
-                handlers: './handlers'
-            });
-        });
-    });
-
-    t.test('basedir with no handlers property', function(t) {
-        t.plan(1);
-
-        t.doesNotThrow(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                basedir: path.join(__dirname, './fixtures')
-            });
-        });
-    });
-
-    t.test('handlers as object', function(t) {
-        t.plan(1);
-
-        t.doesNotThrow(function () {
-            swaggerize({
-                api: require('./fixtures/defs/pets.json'),
-                handlers: {
-                    $get: function () {}
+    t.test('handlers as object', t => {
+        Swaggerize({
+            api: require('./fixtures/defs/pets.json'),
+            handlers: {
+                'pets': {
+                    $get: function () {
+                        return 'hi';
+                    }
                 }
-            });
+            }
+        }).then(routeObj => {
+            let { routes } = routeObj;
+            t.ok(Thing.isArray(routes), 'constructed routes from handlers as object');
+            t.strictEqual(routes.length, 1, 'routes.length 1.');
+            t.ok(Thing.isFunction(routes[0].handler), 'handler function');
+            t.strictEqual(routes[0].handler(), 'hi', 'Ok handler function execution.');
+            t.end();
+        }).catch(error => {
+            t.error(error);
+            t.end();
         });
+
     });
-
-
 });

@@ -13,28 +13,64 @@ Lead Maintainer: [Trevor Livingston](https://github.com/tlivings/)
 - Schema validation.
 - Building route definitions from a Swagger 2.0 document.
 - Validation helpers for input parameters.
+- Validation helpers for response.
 
 ### Usage
 
 ```javascript
-var builder = require('swaggerize-routes');
+const builder = require('swaggerize-routes');
 
-var routes = builder({
+const routeBuilder = builder({
     api: require('./api.json'),
     handlers: './handlers',
     security: './security' //Optional - security authorize handlers as per `securityDefinitions`
 }));
+
+//Promise Style
+routeBuilder.then(routeObj => {
+    let { api, routes } = routeObj;
+    // `api` is the resolved swagger api Object ($ref, both remote and local references are resolved)
+    // `routes` - an array of routes corresponding to the swagger api `paths`.
+
+}).catch(error => Assert.ifError(error));
+
+//OR
+
+// Callback style
+builder({
+    api: 'http://petstore.swagger.io/v2/swagger.json',
+    handlers: './handlers',
+    security: './security', //Optional - security authorize handlers as per `securityDefinitions`
+    joischema: true //Set to true if `joischema` need to be used for validators.
+}), (error, routes) => {
+    Assert.ifError(error);
+    let { api, routes } = routeObj;
+    // `api` is the resolved swagger api Object ($ref and remote and local ref are resolved)
+    // `routes` - an array of routes corresponding to the swagger api `paths`.
+});
+
 ```
 
-Options:
+### API
 
-- `api` - a valid Swagger 2.0 object.
-- `handlers` - either a directory structure for route handlers or a premade object (see *Handlers Object* below).
-- `basedir` - base directory to search for `handlers` path (defaults to `dirname` of caller).
-- `schemas` - an array of `{name: string, schema: string|object}` representing additional schemas to add to validation.
-- `security` - directory to scan for authorize handlers corresponding to `securityDefinitions`.
+`builder(options, [cb])`
 
-**Returns:** An array of the processed routes.
+* `options` - (*Object*) - (required) - Options to build the routes based on swagger api.
+
+    - `api` - (*Object*) or (*String*) or (*Promise*) - (required) - api can be one of the following.
+        - A relative or absolute path to the Swagger api document.
+        - A URL of the Swagger api document.
+        - The swagger api Object
+        - A promise (or a `thenable`) that resolves to the swagger api Object.
+
+    - `handlers` - (*Object*) or (*String*) - (required) - either a directory structure for route handlers or a pre-created object (see *Handlers Object* below). If `handlers` option is not provided, route builder will try to use the default `handlers` directory (only if it exists). If there is no `handlers` directory available, then the route builder will try to use the `x-handler` swagger schema extension.
+    - `basedir` - (*String*) - (optional) - base directory to search for `handlers` path (defaults to `dirname` of caller).
+    - `security` - (*String*) - (optional) - directory to scan for authorize handlers corresponding to `securityDefinitions`.
+    - `validated` -  (*Boolean*) - (optional) - Set this property to `true` if the api is already validated against swagger schema and already dereferenced all the `$ref`. This is really useful to generate validators for parsed api specs. Default value for this is `false` and the api will be validated using [swagger-parser validate](https://github.com/BigstickCarpet/swagger-parser/blob/master/docs/swagger-parser.md#validateapi-options-callback).
+    - `joischema` - (*Boolean*) - (optional) - Set to `true` if you want to use [Joi](https://github.com/hapijs/joi) schema based Validators. Swagvali uses [enjoi](https://github.com/tlivings/enjoi) - The json to joi schema converter - to build the validator functions, if `joischema` option is set to `true`.
+
+* `callback` -  (*Function*) - (optional) - `function (error, mock)`. If a callback is not provided a `Promise` will be returned.
+
 
 ### Handlers Directory
 
@@ -162,7 +198,11 @@ Example:
 
 Handler keys in files do *not* have to be namespaced in this way.
 
-### Route Object
+### Route Object response
+
+The response route object has two properties - `api` and `routes`.
+
+`api` is the resolved swagger api object. This has all the resolved $ref values - both local and remote references.
 
 The `routes` array returned from the call to the builder will contain `route` objects. Each `route` has the following properties:
 
@@ -176,13 +216,13 @@ The `routes` array returned from the call to the builder will contain `route` ob
 - `consumes` - same as `consumes` in `api` definition.
 - `produces` - same as `produces` in `api` definition.
 
-### Validator Object
+#### Validator Object
 
 The validator object in the `validators` array will have the following properties:
 
-- `parameter` - same as the `parameter` from the operation on `path`.
 - `validate(value, callback)` - a function for validating the input data against the `parameter` definition.
-- `schema` - the `joi` schema being validated against.
+- `spec` - The schema of the parameter.
+- `joischema` - The `joi` schema being validated against. This will be available only for the validators with option `joischema` set as `true`. By default the validator uses `is-my-json-valid` JSON schema validator and `joischema` property in validator object will be `undefined`.
 
 ### Security directory
 

@@ -41,15 +41,6 @@
                         "secondary": ["read"]
                     }
                 ],
-                "jsonp": "callback",
-                "cache":{
-                  "statuses":[200]
-                },
-                "config": {
-                  "plugins": {
-                    "policies": ["isLoggedIn", "addTracking", "logThis"]
-                  }
-                },
                 "parameters": [
                     {
                         "name": "tags",
@@ -296,6 +287,8 @@
     "securityDefinitions": {
         "default": {
             "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "",
             "scopes": {
                 "read": "read pets.",
                 "write": "write pets."
@@ -304,6 +297,8 @@
         },
         "secondary": {
             "type": "oauth2",
+            "flow": "implicit",
+            "authorizationUrl": "",
             "scopes": {
                 "read": "read secondary pets.",
                 "write": "write secondary pets."
