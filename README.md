@@ -1,7 +1,4 @@
-swaggerize-routes (formerly swaggerize-builder)
-==================
-
-Lead Maintainer: [Trevor Livingston](https://github.com/tlivings/)  
+# swaggerize-routes (formerly swaggerize-builder)
 
 [![Build Status](https://travis-ci.org/krakenjs/swaggerize-routes.svg?branch=master)](https://travis-ci.org/krakenjs/swaggerize-routes)
 [![NPM version](https://badge.fury.io/js/swaggerize-routes.png)](http://badge.fury.io/js/swaggerize-routes)  

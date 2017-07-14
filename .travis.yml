@@ -1,10 +1,9 @@
 language: node_js
 node_js:
-  - "4.2"
   - "0.12"
-  - "0.10"
-  - "iojs"
-  - "iojs-v1.1.0"
+  - "4"
+  - "6"
+  - "8"
 branches:
   only:
     - master
@@ -12,5 +11,5 @@ branches:
 before_install:
   - git submodule update --init --recursive
 script:
-  - "npm run-script cover"
-  - "npm run-script lint"
+  - "npm run cover"
+  - "npm run lint"
