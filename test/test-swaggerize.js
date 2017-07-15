@@ -43,7 +43,7 @@ test('configure', function (t) {
         });
 
         t.ok(thing.isArray(routes), 'returns array.');
-        t.strictEqual(routes.length, 4, 'routes.length 4.');
+        t.strictEqual(routes.length, 5, 'routes.length 5.');
     });
 
 });

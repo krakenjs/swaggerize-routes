@@ -278,13 +278,74 @@
                     "format": "dateTime"
                 }
             ]
+        },
+        "/pets/{id}/items/{itemId}": {
+            "put": {
+                "description": "update some pet's item",
+                "operationId": "updatePetItem",
+                "x-handler": "extensions/items.js",
+                "produces": [
+                    "application/json"
+                ],
+                "security": [
+                    {
+                        "default": ["read"]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "Item to add to the store",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "old item, before update",
+                        "schema": {
+                            "$ref": "#/definitions/Item"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {"$ref": "#/parameters/id"},
+                {"$ref": "#/parameters/itemId"},
+                {
+                    "name": "date",
+                    "in": "header",
+                    "description": "Operation date",
+                    "required": false,
+                    "type": "string",
+                    "format": "dateTime"
+                }
+            ]
         }
+
     },
     "parameters": {
         "id": {
             "name": "id",
             "in": "path",
             "description": "Pet id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+        },
+        "itemId": {
+            "name": "itemId",
+            "in": "path",
+            "description": "Item id",
             "required": true,
             "type": "integer",
             "format": "int64"

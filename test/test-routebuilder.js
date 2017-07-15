@@ -17,7 +17,7 @@ test('routebuilder', function (t) {
             security: path.join(__dirname, 'fixtures/extensions')
         });
 
-        t.strictEqual(routes.length, 4, 'added 4 routes.');
+        t.strictEqual(routes.length, 5, 'added 5 routes.');
 
         routes.forEach(function (route) {
             t.notEqual(route.method, 'has method property.');
@@ -55,7 +55,7 @@ test('routebuilder', function (t) {
     t.test('build from x-handler', function (t) {
         routes = buildroutes({ api: api, basedir: path.join(__dirname, 'fixtures')});
 
-        t.strictEqual(routes.length, 2, 'added 2 routes.');
+        t.strictEqual(routes.length, 3, 'added 3 routes.');
 
         routes.forEach(function (route) {
             t.notEqual(route.method, undefined, 'has method property.');
@@ -92,7 +92,7 @@ test('routebuilder', function (t) {
             schemaValidator: schemaValidator
         });
 
-        t.strictEqual(routes.length, 6, 'added 6 routes.');
+        t.strictEqual(routes.length, 7, 'added 7 routes.');
 
         routes.forEach(function (route) {
             t.ok(route.hasOwnProperty('method'), 'has method property.');
@@ -163,12 +163,14 @@ test('routebuilder', function (t) {
     t.test('route validator merge', function(t) {
         var route;
         route = routes[5];
-
         t.strictEqual(route.validators.length, 3, 'has 3 validators.');
 
         var validator;
         validator = route.validators.filter(function (validator) {return validator.parameter.name === 'date'}).shift();
         t.ok(validator.parameter.required, 'override by operation.');
+
+        route = routes[6];
+        t.strictEqual(route.validators.length, 4, 'has 4 validators.');
 
         t.end();
     });
