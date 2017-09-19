@@ -440,4 +440,46 @@ test('named validation', function (t) {
     });
   });
 
+  t.test('input fail (not present) - parameter name in each details.context.key', function (t) {
+
+    var parameterName = 'test_details_message_contains_parameter';
+
+    validator.make({
+      name: parameterName,
+      required: true,
+      type: 'integer'
+    }).validate(undefined, function (error) {
+
+      var numErrorDetails = error.details.length;
+
+      t.plan(numErrorDetails + 1);
+      t.ok(error, 'error.');
+      error.details.forEach(function (detail) {
+        t.equal(detail.context.key, parameterName);
+      });
+    });
+  });
+
+  t.test('input fail (not present) - parameter location in each details.context.location', function (t) {
+
+    var parameterName = 'test_details_message_contains_parameter';
+    var location = 'query';
+
+    validator.make({
+      name: parameterName,
+      required: true,
+      type: 'integer',
+      in: location
+    }).validate(undefined, function (error) {
+
+      var numErrorDetails = error.details.length;
+
+      t.plan(numErrorDetails + 1);
+      t.ok(error, 'error.');
+      error.details.forEach(function (detail) {
+        t.equal(detail.context.location, location);
+      });
+    });
+  });
+
 });
