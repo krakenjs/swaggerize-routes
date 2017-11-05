@@ -64,6 +64,7 @@ builder({
         - A promise (or a `thenable`) that resolves to the swagger api Object.
 
     - `handlers` - (*Object*) or (*String*) - (required) - either a directory structure for route handlers or a pre-created object (see *Handlers Object* below). If `handlers` option is not provided, route builder will try to use the default `handlers` directory (only if it exists). If there is no `handlers` directory available, then the route builder will try to use the `x-handler` swagger schema extension.
+    - `defaulthandler` - (*Function*) - (optional) - default fallback handler if no other handler was provided.
     - `basedir` - (*String*) - (optional) - base directory to search for `handlers` path (defaults to `dirname` of caller).
     - `security` - (*String*) - (optional) - directory to scan for authorize handlers corresponding to `securityDefinitions`.
     - `validated` -  (*Boolean*) - (optional) - Set this property to `true` if the api is already validated against swagger schema and already dereferenced all the `$ref`. This is really useful to generate validators for parsed api specs. Default value for this is `false` and the api will be validated using [swagger-parser validate](https://github.com/BigstickCarpet/swagger-parser/blob/master/docs/swagger-parser.md#validateapi-options-callback).
