@@ -1,3 +1,9 @@
+### 1.0.12
+
+- Update to node v10, add `package-lock.json` file
+- Update for following dependencies: `enjoi` and `tape` 
+- Use of `eslint` instead of `jshint` as linter tool. Use of `nyc` instead of `istambul` as a code coverage tool. 
+
 ### 1.0.11
 
 - Fix #76 - parameter minLength is overridden with value 0
