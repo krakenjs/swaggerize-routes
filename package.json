@@ -17,7 +17,7 @@
   },
   "bugs": "http://github.com/krakenjs/swaggerize-builder/issues",
   "engines": {
-    "node": ">=10"
+    "node": ">=12"
   },
   "dependencies": {
     "caller": "^1.0.1",
