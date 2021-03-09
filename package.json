@@ -25,7 +25,7 @@
     "debuglog": "^1.0.1",
     "joi": "^17.4.0",
     "enjoi": "^9.0.0",
-    "swagger-schema-official": "^2.0.0-"
+    "swagger-schema-official": "^2.0.0-bab6bed"
   },
   "devDependencies": {
     "eslint": "^7.21.0",
