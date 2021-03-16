@@ -312,13 +312,7 @@ test('validation', function (t) {
     t.test('input ignore extra value', function(t) {
         t.plan(2);
 
-        var v = validator.make(require('./fixtures/defs/pets.json').definitions.Pet);
-
-        v.schema._settings = {
-          allowUnknown: true,
-          stripUnknown: true
-        };
-
+        var v = validator.make(require('./fixtures/defs/pets.json').definitions.Pet, null,true);
         v.validate({ id: 1, name: 'fluffy', extra: 'foo'}, function(error, result) {
             t.ok(!error, 'no error.');
             t.ok(!result.extra, 'No extra properties')
@@ -435,7 +429,7 @@ test('named validation', function (t) {
       t.plan(numErrorDetails + 1);
       t.ok(error, 'error.');
       error.details.forEach(function (detail) {
-        t.ok(detail.path === parameterName, 'Expected error.details.path to equal ' + parameterName);
+        t.ok(detail.path[0] === parameterName, 'Expected error.details.path to equal ' + parameterName);
       });
     });
   });
